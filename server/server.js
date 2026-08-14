@@ -1,6 +1,6 @@
 import express from "express";
 const app = express();
-const PORT = 5000;
+const port = process.env.PORT || 5000;
 
 app.use(express.json());
 
@@ -10,6 +10,6 @@ app.get("/", (req, res) => {
   });
 });
 
-app.listen(PORT, () => {
-  console.log(`server runnig on http://localhost:${PORT}`);
+app.listen(port, () => {
+  console.log(`server runnig on http://localhost:${port}`);
 });

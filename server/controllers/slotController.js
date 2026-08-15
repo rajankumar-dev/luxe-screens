@@ -2,7 +2,11 @@ import Slot from "../models/Slot.js";
 
 export const getSlots = async (req, res) => {
   try {
-    const slots = await Slot.find();
+    const { theaterId } = req.query;
+
+    const filter = theaterId ? { theaterId } : {};
+
+    const slots = await Slot.find(filter);
 
     res.status(200).json({
       success: true,

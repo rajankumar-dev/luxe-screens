@@ -5,6 +5,7 @@ import connectDB from "./config/db.js";
 
 //Import Routes
 import theaterRoutes from "./routes/theaterRoutes.js";
+import slotRoutes from "./routes/slotRoutes.js";
 
 dotenv.config();
 const app = express();
@@ -27,6 +28,7 @@ app.get("/", (req, res) => {
 
 //Routes
 app.use("/api/theaters", theaterRoutes);
+app.use("/api/slots", slotRoutes);
 
 app.listen(port, () => {
   console.log(`server runnig on http://localhost:${port}`);

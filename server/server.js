@@ -8,6 +8,7 @@ import theaterRoutes from "./routes/theaterRoutes.js";
 import slotRoutes from "./routes/slotRoutes.js";
 import addOns from "./routes/addOnRoutes.js";
 import bookingRoutes from "./routes/bookingRoutes.js";
+import cartItemRoutes from "./routes/cartItemRoutes.js";
 
 dotenv.config();
 const app = express();
@@ -33,6 +34,7 @@ app.use("/api/theaters", theaterRoutes);
 app.use("/api/slots", slotRoutes);
 app.use("/api/addOns", addOns);
 app.use("/api/bookings", bookingRoutes);
+app.use("/api/cart-items", cartItemRoutes);
 
 app.listen(port, () => {
   console.log(`server runnig on http://localhost:${port}`);

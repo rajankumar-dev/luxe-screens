@@ -3,6 +3,9 @@ import dotenv from "dotenv";
 import cors from "cors";
 import connectDB from "./config/db.js";
 
+//Import Routes
+import theaterRoutes from "./routes/theaterRoutes.js";
+
 dotenv.config();
 const app = express();
 
@@ -21,6 +24,9 @@ app.get("/", (req, res) => {
     message: "Luxe Screen API is running",
   });
 });
+
+//Routes
+app.use("/api/theaters", theaterRoutes);
 
 app.listen(port, () => {
   console.log(`server runnig on http://localhost:${port}`);

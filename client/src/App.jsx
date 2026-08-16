@@ -5,6 +5,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import "./index.css";
 import Gallery from "./pages/Gallery";
 import Home from "./pages/Home";
+import Booking from "./pages/Booking";
 
 function App() {
   return (
@@ -18,6 +19,7 @@ function App() {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/gallery" element={<Gallery />} />
+          <Route path="/booking" element={<Booking />} />
         </Routes>
 
         {/* <main id="home">

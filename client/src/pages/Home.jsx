@@ -26,9 +26,12 @@ const Home = () => {
                         </p>
 
                         <div className="mt-8 flex flex-wrap gap-4">
-                            <button className="rounded-full bg-white px-7 py-3 font-medium text-black hover:bg-white/90">
+                            <Link
+                                to="/booking"
+                                className="rounded-full bg-white px-7 py-3 font-medium text-black hover:bg-white/90"
+                            >
                                 Book Your Experience
-                            </button>
+                            </Link>
 
                             <button className="rounded-full border border-white/20 px-7 py-3 font-medium hover:bg-white/10">
                                 Explore Theatres

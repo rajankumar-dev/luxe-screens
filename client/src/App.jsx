@@ -1,36 +1,37 @@
 import Footer from "./components/layouts/Footer";
 import Header from "./components/layouts/Header";
-import Contact from "./components/sections/Contact";
-import FAQ from "./components/sections/FAQ";
-import GalleryPreview from "./components/sections/GalleryPreview";
-import Hero from "./components/sections/Hero";
-import Services from "./components/sections/Services";
+
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 import "./index.css";
+import Gallery from "./pages/Gallery";
+import Home from "./pages/Home";
 
 function App() {
   return (
+    <BrowserRouter>
 
-    <div className="min-h-screen bg-black text-white">
+      <div className="min-h-screen bg-black text-white">
 
-      {/* Navbar */}
-      <Header />
+        {/* Navbar */}
+        <Header />
 
-      <main id="home">
-        {/* Hero */}
-        <Hero />
-        {/* Services */}
-        <Services />
-        {/* Gallery Preview */}
-        <GalleryPreview />
-        {/* FAQ */}
-        <FAQ />
-        {/* Contact */}
-        <Contact />
-      </main>
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/gallery" element={<Gallery />} />
+        </Routes>
 
-      {/* Footer */}
-      <Footer />
-    </div>
+        {/* <main id="home">
+          <Hero />
+          <Services />
+          <GalleryPreview />
+          <FAQ />
+          <Contact />
+        </main> */}
+
+        {/* Footer */}
+        <Footer />
+      </div>
+    </BrowserRouter>
   );
 }
 

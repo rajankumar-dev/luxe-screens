@@ -22,6 +22,12 @@ function Booking() {
     // Step 4
     const [occasion, setOccasion] = useState("");
 
+    // Step 5
+    const [cakes, setCakes] = useState([]);
+    const [selectedCake, setSelectedCake] = useState(null);
+    const [selectedCakeOption, setSelectedCakeOption] = useState(null);
+    const [cakesLoading, setCakesLoading] = useState(false);
+
     // Fetch slots
     useEffect(() => {
         const fetchSlots = async () => {
@@ -82,6 +88,36 @@ function Booking() {
             setStep(2);
         }
     };
+
+    useEffect(() => {
+        if (step !== 5) return;
+
+        const fetchCakes = async () => {
+            try {
+                setCakesLoading(true);
+
+                const response = await fetch(
+                    "http://localhost:5000/api/addons"
+                );
+
+                const data = await response.json();
+
+                if (data.success) {
+                    const cakeAddOns = data.addons.filter(
+                        (addOn) => addOn.category === "CAKE"
+                    );
+
+                    setCakes(cakeAddOns);
+                }
+            } catch (error) {
+                console.error("Failed to fetch cakes:", error);
+            } finally {
+                setCakesLoading(false);
+            }
+        };
+
+        fetchCakes();
+    }, [step]);
 
     return (
         <main className="min-h-screen bg-black px-6 py-16 text-white">
@@ -173,6 +209,26 @@ function Booking() {
 
                         <span className="text-sm">
                             Occasion
+                        </span>
+                    </div>
+
+                    <div className="h-px w-12 bg-white/10" />
+                    {/*Step 5 */}
+                    <div
+                        className={`flex items-center gap-3 ${step >= 5 ? "text-white" : "text-white/30"
+                            }`}
+                    >
+                        <div
+                            className={`flex h-8 w-8 items-center justify-center rounded-full text-sm font-medium ${step >= 5
+                                ? "bg-white text-black"
+                                : "border border-white/20 text-white/40"
+                                }`}
+                        >
+                            5
+                        </div>
+
+                        <span className="text-sm">
+                            Cakes
                         </span>
                     </div>
 
@@ -497,6 +553,111 @@ function Booking() {
                         </div>
                     </section>
                 )}
+
+                {/* STEP 5 */}
+                {step === 5 && (
+                    <section className="mt-10 rounded-3xl border border-white/10 bg-white/5 p-6">
+                        <h2 className="text-2xl font-semibold">
+                            Choose a Cake
+                        </h2>
+
+                        <p className="mt-2 text-sm text-white/40">
+                            Add a cake to make your experience special.
+                        </p>
+
+                        {cakesLoading ? (
+                            <p className="mt-8 text-sm text-white/40">
+                                Loading cakes...
+                            </p>
+                        ) : cakes.length === 0 ? (
+                            <p className="mt-8 text-sm text-white/40">
+                                No cakes available.
+                            </p>
+                        ) : (
+                            <div className="mt-8 grid gap-5 sm:grid-cols-2">
+                                {cakes.map((cake) => {
+                                    const isSelected = selectedCake?._id === cake._id;
+
+                                    return (
+                                        <div
+                                            key={cake._id}
+                                            className={`rounded-2xl border p-6 transition ${isSelected
+                                                ? "border-white bg-white text-black"
+                                                : "border-white/10 bg-black"
+                                                }`}
+                                        >
+                                            <h3 className="text-xl font-semibold">
+                                                {cake.name}
+                                            </h3>
+
+                                            <p
+                                                className={`mt-2 text-sm ${isSelected
+                                                    ? "text-black/50"
+                                                    : "text-white/40"
+                                                    }`}
+                                            >
+                                                Select your preferred size
+                                            </p>
+
+                                            <div className="mt-5 flex flex-wrap gap-3">
+                                                {cake.options.map((option) => {
+                                                    const optionSelected =
+                                                        selectedCake?._id === cake._id &&
+                                                        selectedCakeOption?._id === option._id;
+
+                                                    return (
+                                                        <button
+                                                            key={option._id}
+                                                            type="button"
+                                                            onClick={() => {
+                                                                setSelectedCake(cake);
+                                                                setSelectedCakeOption(option);
+                                                            }}
+                                                            className={`rounded-xl border px-4 py-3 text-left transition ${optionSelected
+                                                                ? "border-black bg-black text-white"
+                                                                : isSelected
+                                                                    ? "border-black/20 text-black hover:bg-black/10"
+                                                                    : "border-white/10 text-white hover:border-white/30"
+                                                                }`}
+                                                        >
+                                                            <p className="text-sm font-medium">
+                                                                {option.name}
+                                                            </p>
+
+                                                            <p className="mt-1 text-xs opacity-60">
+                                                                ₹{option.price}
+                                                            </p>
+                                                        </button>
+                                                    );
+                                                })}
+                                            </div>
+                                        </div>
+                                    );
+                                })}
+                            </div>
+                        )}
+
+                        <div className="mt-8 flex justify-between">
+                            <button
+                                type="button"
+                                onClick={() => setStep(4)}
+                                className="rounded-full border border-white/20 px-7 py-3 text-sm hover:bg-white/10"
+                            >
+                                Back
+                            </button>
+
+                            <button
+                                type="button"
+                                onClick={() => setStep(6)}
+                                disabled={!selectedCake || !selectedCakeOption}
+                                className="rounded-full bg-white px-7 py-3 font-medium text-black transition hover:bg-white/90 disabled:cursor-not-allowed disabled:opacity-30"
+                            >
+                                Continue
+                            </button>
+                        </div>
+                    </section>
+                )}
+
 
             </div>
         </main>

@@ -14,6 +14,11 @@ function Booking() {
     const [selectedTheater, setSelectedTheater] = useState(null);
     const [theatersLoading, setTheatersLoading] = useState(false);
 
+    // Step 3
+    const [name, setName] = useState("");
+    const [phone, setPhone] = useState("");
+    const [email, setEmail] = useState("");
+
     // Fetch slots
     useEffect(() => {
         const fetchSlots = async () => {
@@ -92,6 +97,7 @@ function Booking() {
 
                 {/* Step indicator */}
                 <div className="mt-10 flex items-center gap-6">
+                    {/* Step 1 */}
                     <div
                         className={`flex items-center gap-3 ${step >= 1 ? "text-white" : "text-white/30"
                             }`}
@@ -106,15 +112,15 @@ function Booking() {
                     </div>
 
                     <div className="h-px w-12 bg-white/10" />
-
+                    {/* Step 2 */}
                     <div
                         className={`flex items-center gap-3 ${step >= 2 ? "text-white" : "text-white/30"
                             }`}
                     >
                         <div
                             className={`flex h-8 w-8 items-center justify-center rounded-full text-sm font-medium ${step >= 2
-                                    ? "bg-white text-black"
-                                    : "border border-white/20 text-white/40"
+                                ? "bg-white text-black"
+                                : "border border-white/20 text-white/40"
                                 }`}
                         >
                             2
@@ -124,6 +130,27 @@ function Booking() {
                             Theatre
                         </span>
                     </div>
+
+                    <div className="h-px w-12 bg-white/10" />
+                    {/* Step 3 */}
+                    <div
+                        className={`flex items-center gap-3 ${step >= 3 ? "text-white" : "text-white/30"
+                            }`}
+                    >
+                        <div
+                            className={`flex h-8 w-8 items-center justify-center rounded-full text-sm font-medium ${step >= 3
+                                ? "bg-white text-black"
+                                : "border border-white/20 text-white/40"
+                                }`}
+                        >
+                            3
+                        </div>
+
+                        <span className="text-sm">
+                            Contact Details
+                        </span>
+                    </div>
+
                 </div>
 
                 {/* STEP 1 */}
@@ -173,8 +200,8 @@ function Booking() {
                                                     type="button"
                                                     onClick={() => setSelectedSlot(slot)}
                                                     className={`rounded-xl border px-4 py-4 text-left transition ${isSelected
-                                                            ? "border-white bg-white text-black"
-                                                            : "border-white/10 bg-black hover:border-white/30"
+                                                        ? "border-white bg-white text-black"
+                                                        : "border-white/10 bg-black hover:border-white/30"
                                                         }`}
                                                 >
                                                     <p className="font-medium">
@@ -183,8 +210,8 @@ function Booking() {
 
                                                     <p
                                                         className={`mt-1 text-xs ${isSelected
-                                                                ? "text-black/60"
-                                                                : "text-white/40"
+                                                            ? "text-black/60"
+                                                            : "text-white/40"
                                                             }`}
                                                     >
                                                         Available
@@ -242,14 +269,14 @@ function Booking() {
                                             type="button"
                                             onClick={() => setSelectedTheater(theater)}
                                             className={`rounded-2xl border p-6 text-left transition ${isSelected
-                                                    ? "border-white bg-white text-black"
-                                                    : "border-white/10 bg-black hover:border-white/30"
+                                                ? "border-white bg-white text-black"
+                                                : "border-white/10 bg-black hover:border-white/30"
                                                 }`}
                                         >
                                             <p
                                                 className={`text-xs uppercase tracking-[0.2em] ${isSelected
-                                                        ? "text-black/50"
-                                                        : "text-white/40"
+                                                    ? "text-black/50"
+                                                    : "text-white/40"
                                                     }`}
                                             >
                                                 Theatre
@@ -261,8 +288,8 @@ function Booking() {
 
                                             <p
                                                 className={`mt-4 text-sm ${isSelected
-                                                        ? "text-black/60"
-                                                        : "text-white/40"
+                                                    ? "text-black/60"
+                                                    : "text-white/40"
                                                     }`}
                                             >
                                                 Base Price: ₹{theater.basePrice}
@@ -310,7 +337,88 @@ function Booking() {
 
                             <button
                                 type="button"
+                                onClick={() => setStep(3)}
                                 disabled={!selectedTheater}
+                                className="rounded-full bg-white px-7 py-3 font-medium text-black transition hover:bg-white/90 disabled:cursor-not-allowed disabled:opacity-30"
+                            >
+                                Continue
+                            </button>
+                        </div>
+                    </section>
+                )}
+
+                {/* STEP 3 */}
+                {step === 3 && (
+                    <section className="mt-10 rounded-3xl border border-white/10 bg-white/5 p-6">
+                        <h2 className="text-2xl font-semibold">
+                            Contact Details
+                        </h2>
+
+                        <p className="mt-2 text-sm text-white/40">
+                            Enter your contact information to continue.
+                        </p>
+
+                        <div className="mt-8 space-y-5">
+                            {/* Name */}
+                            <div>
+                                <label className="text-sm text-white/60">
+                                    Name
+                                </label>
+
+                                <input
+                                    type="text"
+                                    value={name}
+                                    onChange={(e) => setName(e.target.value)}
+                                    placeholder="Enter your name"
+                                    className="mt-2 w-full rounded-xl border border-white/10 bg-black px-4 py-3 text-white outline-none placeholder:text-white/30 focus:border-white/30"
+                                />
+                            </div>
+
+                            {/* Phone */}
+                            <div>
+                                <label className="text-sm text-white/60">
+                                    Phone
+                                </label>
+
+                                <input
+                                    type="tel"
+                                    value={phone}
+                                    onChange={(e) => setPhone(e.target.value)}
+                                    placeholder="Enter your phone number"
+                                    className="mt-2 w-full rounded-xl border border-white/10 bg-black px-4 py-3 text-white outline-none placeholder:text-white/30 focus:border-white/30"
+                                />
+                            </div>
+
+                            {/* Email */}
+                            <div>
+                                <label className="text-sm text-white/60">
+                                    Email
+                                </label>
+
+                                <input
+                                    type="email"
+                                    value={email}
+                                    onChange={(e) => setEmail(e.target.value)}
+                                    placeholder="Enter your email"
+                                    className="mt-2 w-full rounded-xl border border-white/10 bg-black px-4 py-3 text-white outline-none placeholder:text-white/30 focus:border-white/30"
+                                />
+                            </div>
+                        </div>
+
+                        {/* Buttons */}
+                        <div className="mt-8 flex justify-between">
+                            <button
+                                type="button"
+                                onClick={() => setStep(2)}
+                                className="rounded-full border border-white/20 px-7 py-3 text-sm hover:bg-white/10"
+                            >
+                                Back
+                            </button>
+
+                            <button
+                                type="button"
+                                onClick={() => setStep(4)}
+                                disabled={!name || !phone || !email}
                                 className="rounded-full bg-white px-7 py-3 font-medium text-black transition hover:bg-white/90 disabled:cursor-not-allowed disabled:opacity-30"
                             >
                                 Continue

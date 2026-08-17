@@ -60,19 +60,50 @@ const seedData = async () => {
 
     await AddOn.insertMany([
       {
-        name: "Birthday Cake",
+        name: "Chocolate Cake",
         category: "CAKE",
-        options: ["Chocolate", "Vanilla", "Red Velvet"],
+        options: [
+          {
+            name: "1 Pound",
+            price: 599,
+          },
+          {
+            name: "2 Pound",
+            price: 999,
+          },
+        ],
       },
       {
         name: "Room Decoration",
         category: "DECOR",
-        options: ["Basic", "Premium"],
+        options: [
+          {
+            name: "Basic",
+            price: 999,
+          },
+          {
+            name: "Premium",
+            price: 1999,
+          },
+        ],
       },
       {
         name: "Gift",
         category: "GIFT",
-        options: ["Teddy Bear", "Flowers", "Chocolates"],
+        options: [
+          {
+            name: "Teddy Bear",
+            price: 499,
+          },
+          {
+            name: "Flowers",
+            price: 699,
+          },
+          {
+            name: "Chocolates",
+            price: 399,
+          },
+        ],
       },
     ]);
 

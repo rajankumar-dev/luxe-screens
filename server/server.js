@@ -10,6 +10,9 @@ import addOns from "./routes/addOnRoutes.js";
 import bookingRoutes from "./routes/bookingRoutes.js";
 import cartItemRoutes from "./routes/cartItemRoutes.js";
 
+//auth routes
+import authRoutes from "./routes/authRoute.js";
+
 dotenv.config();
 const app = express();
 
@@ -35,6 +38,7 @@ app.use("/api/slots", slotRoutes);
 app.use("/api/addOns", addOns);
 app.use("/api/bookings", bookingRoutes);
 app.use("/api/cart-items", cartItemRoutes);
+app.use("/api/auth", authRoutes);
 
 app.listen(port, () => {
   console.log(`server runnig on http://localhost:${port}`);

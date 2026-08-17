@@ -19,6 +19,9 @@ function Booking() {
     const [phone, setPhone] = useState("");
     const [email, setEmail] = useState("");
 
+    // Step 4
+    const [occasion, setOccasion] = useState("");
+
     // Fetch slots
     useEffect(() => {
         const fetchSlots = async () => {
@@ -148,6 +151,28 @@ function Booking() {
 
                         <span className="text-sm">
                             Contact Details
+                        </span>
+                    </div>
+
+                    {/* Step 3 → Step 4 line */}
+                    <div className="h-px w-12 bg-white/10" />
+
+                    {/* Step 4 */}
+                    <div
+                        className={`flex items-center gap-3 ${step >= 4 ? "text-white" : "text-white/30"
+                            }`}
+                    >
+                        <div
+                            className={`flex h-8 w-8 items-center justify-center rounded-full text-sm font-medium ${step >= 4
+                                ? "bg-white text-black"
+                                : "border border-white/20 text-white/40"
+                                }`}
+                        >
+                            4
+                        </div>
+
+                        <span className="text-sm">
+                            Occasion
                         </span>
                     </div>
 
@@ -426,6 +451,53 @@ function Booking() {
                         </div>
                     </section>
                 )}
+
+                {/* STEP 4 */}
+                {step === 4 && (
+                    <section className="mt-10 rounded-3xl border border-white/10 bg-white/5 p-6">
+                        <h2 className="text-2xl font-semibold">
+                            Occasion
+                        </h2>
+
+                        <p className="mt-2 text-sm text-white/40">
+                            Tell us the occasion for your theatre experience.
+                        </p>
+
+                        <div className="mt-8">
+                            <label className="text-sm text-white/60">
+                                Occasion
+                            </label>
+
+                            <input
+                                type="text"
+                                value={occasion}
+                                onChange={(e) => setOccasion(e.target.value)}
+                                placeholder="Enter your occasion"
+                                className="mt-2 w-full rounded-xl border border-white/10 bg-black px-4 py-3 text-white outline-none placeholder:text-white/30 focus:border-white/30"
+                            />
+                        </div>
+
+                        <div className="mt-8 flex justify-between">
+                            <button
+                                type="button"
+                                onClick={() => setStep(3)}
+                                className="rounded-full border border-white/20 px-7 py-3 text-sm hover:bg-white/10"
+                            >
+                                Back
+                            </button>
+
+                            <button
+                                type="button"
+                                onClick={() => setStep(5)}
+                                disabled={!occasion}
+                                className="rounded-full bg-white px-7 py-3 font-medium text-black transition hover:bg-white/90 disabled:cursor-not-allowed disabled:opacity-30"
+                            >
+                                Continue
+                            </button>
+                        </div>
+                    </section>
+                )}
+
             </div>
         </main>
     );

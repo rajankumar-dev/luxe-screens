@@ -11,6 +11,8 @@ import Signup from "./pages/SignUp.jsx";
 import VerifyOTP from "./pages/VerifyOTP.jsx";
 import Login from "./pages/Login.jsx";
 import Profile from "./pages/Profile.jsx";
+import ForgotPassword from "./pages/ForgotPassword.jsx";
+import ResetPassword from "./pages/ResetPassword.jsx";
 
 function AppContent() {
   const location = useLocation();
@@ -38,6 +40,14 @@ function AppContent() {
         <Route path="/verify-otp" element={<VerifyOTP />} />
         <Route path="/login" element={<Login />} />
         <Route path="/profile" element={<Profile />} />
+        <Route
+          path="/forgot-password"
+          element={<ForgotPassword />}
+        />
+        <Route
+          path="/reset-password"
+          element={<ResetPassword />}
+        />
 
       </Routes>
 

@@ -147,3 +147,80 @@ export const verifyOTP = async (req, res) => {
     });
   }
 };
+
+export const resendOTP = async (req, res) => {
+  try {
+    const { email } = req.body;
+
+    // 1. Check email
+    if (!email) {
+      return res.status(400).json({
+        success: false,
+        message: "Email is required",
+      });
+    }
+
+    // 2. Find user
+    const user = await User.findOne({ email });
+
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: "User not found",
+      });
+    }
+
+    // 3. Check if already verified
+    if (user.isVerified) {
+      return res.status(400).json({
+        success: false,
+        message: "Email is already verified",
+      });
+    }
+
+    // 4. Generate new 6-digit OTP
+    const otp = Math.floor(100000 + Math.random() * 900000).toString();
+
+    // 5. Set OTP expiry to 10 minutes
+    const otpExpiresAt = new Date(Date.now() + 10 * 60 * 1000);
+
+    // 6. Update user
+    user.otp = otp;
+    user.otpExpiresAt = otpExpiresAt;
+
+    await user.save();
+
+    // 7. Send new OTP
+    await sendEmail(
+      email,
+      "Luxe Screens - New Verification OTP",
+      `
+        <h2>Luxe Screens Email Verification</h2>
+
+        <p>Hello ${user.name},</p>
+
+        <p>Your new verification OTP is:</p>
+
+        <h1>${otp}</h1>
+
+        <p>This OTP will expire in 10 minutes.</p>
+
+        <p>If you did not request this OTP, please ignore this email.</p>
+
+        <p>Thank you,<br />Luxe Screens Team</p>
+      `,
+    );
+
+    // 8. Response
+    res.status(200).json({
+      success: true,
+      message: "New OTP sent successfully",
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: "Failed to resend OTP",
+      error: error.message,
+    });
+  }
+};

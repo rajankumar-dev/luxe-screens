@@ -34,6 +34,12 @@ function Booking() {
     const [selectedDecorOption, setSelectedDecorOption] = useState(null);
     const [decorLoading, setDecorLoading] = useState(false);
 
+    // Step 7
+    const [gifts, setGifts] = useState([]);
+    const [selectedGift, setSelectedGift] = useState(null);
+    const [selectedGiftOption, setSelectedGiftOption] = useState(null);
+    const [giftsLoading, setGiftsLoading] = useState(false);
+
     // Fetch slots
     useEffect(() => {
         const fetchSlots = async () => {
@@ -154,6 +160,37 @@ function Booking() {
         };
 
         fetchDecors();
+    }, [step]);
+
+    // Gifts
+    useEffect(() => {
+        if (step !== 7) return;
+
+        const fetchGifts = async () => {
+            try {
+                setGiftsLoading(true);
+
+                const response = await fetch(
+                    "http://localhost:5000/api/addons"
+                );
+
+                const data = await response.json();
+
+                if (data.success) {
+                    const giftAddOns = data.addons.filter(
+                        (addOn) => addOn.category === "GIFT"
+                    );
+
+                    setGifts(giftAddOns);
+                }
+            } catch (error) {
+                console.error("Failed to fetch gifts:", error);
+            } finally {
+                setGiftsLoading(false);
+            }
+        };
+
+        fetchGifts();
     }, [step]);
 
     return (
@@ -286,6 +323,27 @@ function Booking() {
 
                         <span className="text-sm">
                             Decor
+                        </span>
+                    </div>
+
+                    <div className="h-px w-12 bg-white/10" />
+
+                    {/* Step 7 */}
+                    <div
+                        className={`flex items-center gap-3 ${step >= 7 ? "text-white" : "text-white/30"
+                            }`}
+                    >
+                        <div
+                            className={`flex h-8 w-8 items-center justify-center rounded-full text-sm font-medium ${step >= 7
+                                ? "bg-white text-black"
+                                : "border border-white/20 text-white/40"
+                                }`}
+                        >
+                            7
+                        </div>
+
+                        <span className="text-sm">
+                            Gifts
                         </span>
                     </div>
 
@@ -812,6 +870,111 @@ function Booking() {
                                 type="button"
                                 onClick={() => setStep(7)}
                                 disabled={!selectedDecor || !selectedDecorOption}
+                                className="rounded-full bg-white px-7 py-3 font-medium text-black transition hover:bg-white/90 disabled:cursor-not-allowed disabled:opacity-30"
+                            >
+                                Continue
+                            </button>
+                        </div>
+                    </section>
+                )}
+
+                {/* STEP 7 */}
+                {step === 7 && (
+                    <section className="mt-10 rounded-3xl border border-white/10 bg-white/5 p-6">
+                        <h2 className="text-2xl font-semibold">
+                            Choose a Gift
+                        </h2>
+
+                        <p className="mt-2 text-sm text-white/40">
+                            Add a gift to make your experience even more special.
+                        </p>
+
+                        {giftsLoading ? (
+                            <p className="mt-8 text-sm text-white/40">
+                                Loading gifts...
+                            </p>
+                        ) : gifts.length === 0 ? (
+                            <p className="mt-8 text-sm text-white/40">
+                                No gifts available.
+                            </p>
+                        ) : (
+                            <div className="mt-8 grid gap-5 sm:grid-cols-2">
+                                {gifts.map((gift) => {
+                                    const isSelected =
+                                        selectedGift?._id === gift._id;
+
+                                    return (
+                                        <div
+                                            key={gift._id}
+                                            className={`rounded-2xl border p-6 transition ${isSelected
+                                                    ? "border-white bg-white text-black"
+                                                    : "border-white/10 bg-black"
+                                                }`}
+                                        >
+                                            <h3 className="text-xl font-semibold">
+                                                {gift.name}
+                                            </h3>
+
+                                            <p
+                                                className={`mt-2 text-sm ${isSelected
+                                                        ? "text-black/50"
+                                                        : "text-white/40"
+                                                    }`}
+                                            >
+                                                Select your preferred gift
+                                            </p>
+
+                                            <div className="mt-5 flex flex-wrap gap-3">
+                                                {gift.options.map((option) => {
+                                                    const optionSelected =
+                                                        selectedGift?._id === gift._id &&
+                                                        selectedGiftOption?._id === option._id;
+
+                                                    return (
+                                                        <button
+                                                            key={option._id}
+                                                            type="button"
+                                                            onClick={() => {
+                                                                setSelectedGift(gift);
+                                                                setSelectedGiftOption(option);
+                                                            }}
+                                                            className={`rounded-xl border px-4 py-3 text-left transition ${optionSelected
+                                                                    ? "border-black bg-black text-white"
+                                                                    : isSelected
+                                                                        ? "border-black/20 text-black hover:bg-black/10"
+                                                                        : "border-white/10 text-white hover:border-white/30"
+                                                                }`}
+                                                        >
+                                                            <p className="text-sm font-medium">
+                                                                {option.name}
+                                                            </p>
+
+                                                            <p className="mt-1 text-xs opacity-60">
+                                                                ₹{option.price}
+                                                            </p>
+                                                        </button>
+                                                    );
+                                                })}
+                                            </div>
+                                        </div>
+                                    );
+                                })}
+                            </div>
+                        )}
+
+                        <div className="mt-8 flex justify-between">
+                            <button
+                                type="button"
+                                onClick={() => setStep(6)}
+                                className="rounded-full border border-white/20 px-7 py-3 text-sm hover:bg-white/10"
+                            >
+                                Back
+                            </button>
+
+                            <button
+                                type="button"
+                                onClick={() => setStep(8)}
+                                disabled={!selectedGift || !selectedGiftOption}
                                 className="rounded-full bg-white px-7 py-3 font-medium text-black transition hover:bg-white/90 disabled:cursor-not-allowed disabled:opacity-30"
                             >
                                 Continue

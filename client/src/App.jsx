@@ -8,6 +8,8 @@ import Gallery from "./pages/Gallery.jsx";
 import Home from "./pages/Home.jsx";
 import Booking from "./pages/Booking.jsx";
 import Signup from "./pages/SignUp.jsx";
+import VerifyOTP from "./pages/VerifyOTP.jsx";
+import Login from "./pages/Login.jsx";
 
 function AppContent() {
   const location = useLocation();
@@ -32,6 +34,9 @@ function AppContent() {
         <Route path="/gallery" element={<Gallery />} />
         <Route path="/booking" element={<Booking />} />
         <Route path="/signup" element={<Signup />} />
+        <Route path="/verify-otp" element={<VerifyOTP />} />
+        <Route path="/login" element={<Login />} />
+
       </Routes>
 
       {!isAuthPage && <Footer />}

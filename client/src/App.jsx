@@ -10,6 +10,7 @@ import Booking from "./pages/Booking.jsx";
 import Signup from "./pages/SignUp.jsx";
 import VerifyOTP from "./pages/VerifyOTP.jsx";
 import Login from "./pages/Login.jsx";
+import Profile from "./pages/Profile.jsx";
 
 function AppContent() {
   const location = useLocation();
@@ -36,6 +37,7 @@ function AppContent() {
         <Route path="/signup" element={<Signup />} />
         <Route path="/verify-otp" element={<VerifyOTP />} />
         <Route path="/login" element={<Login />} />
+        <Route path="/profile" element={<Profile />} />
 
       </Routes>
 

@@ -11,9 +11,13 @@ export const createBooking = async (req, res) => {
       email,
       occasion,
       total,
+      paymentMethod,
       paymentStatus,
       theaterId,
       slotId,
+      cake,
+      decor,
+      gift,
     } = req.body;
 
     const booking = await Booking.create({
@@ -26,9 +30,13 @@ export const createBooking = async (req, res) => {
       email,
       occasion,
       total,
+      paymentMethod,
       paymentStatus,
       theaterId,
       slotId,
+      cake,
+      decor,
+      gift,
     });
 
     res.status(201).json({

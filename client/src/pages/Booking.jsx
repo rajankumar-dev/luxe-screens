@@ -40,6 +40,10 @@ function Booking() {
     const [selectedGiftOption, setSelectedGiftOption] = useState(null);
     const [giftsLoading, setGiftsLoading] = useState(false);
 
+    // Step 8
+    const [paymentMethod, setPaymentMethod] = useState("");
+    const [paymentLoading, setPaymentLoading] = useState(false);
+
     // Fetch slots
     useEffect(() => {
         const fetchSlots = async () => {
@@ -347,6 +351,26 @@ function Booking() {
                         </span>
                     </div>
 
+                    <div className="h-px w-12 bg-white/10" />
+
+                    {/* Step 8 */}
+                    <div
+                        className={`flex items-center gap-3 ${step >= 8 ? "text-white" : "text-white/30"
+                            }`}
+                    >
+                        <div
+                            className={`flex h-8 w-8 items-center justify-center rounded-full text-sm font-medium ${step >= 8
+                                ? "bg-white text-black"
+                                : "border border-white/20 text-white/40"
+                                }`}
+                        >
+                            8
+                        </div>
+
+                        <span className="text-sm">
+                            Payment
+                        </span>
+                    </div>
                 </div>
 
                 {/* STEP 1 */}
@@ -907,8 +931,8 @@ function Booking() {
                                         <div
                                             key={gift._id}
                                             className={`rounded-2xl border p-6 transition ${isSelected
-                                                    ? "border-white bg-white text-black"
-                                                    : "border-white/10 bg-black"
+                                                ? "border-white bg-white text-black"
+                                                : "border-white/10 bg-black"
                                                 }`}
                                         >
                                             <h3 className="text-xl font-semibold">
@@ -917,8 +941,8 @@ function Booking() {
 
                                             <p
                                                 className={`mt-2 text-sm ${isSelected
-                                                        ? "text-black/50"
-                                                        : "text-white/40"
+                                                    ? "text-black/50"
+                                                    : "text-white/40"
                                                     }`}
                                             >
                                                 Select your preferred gift
@@ -939,10 +963,10 @@ function Booking() {
                                                                 setSelectedGiftOption(option);
                                                             }}
                                                             className={`rounded-xl border px-4 py-3 text-left transition ${optionSelected
-                                                                    ? "border-black bg-black text-white"
-                                                                    : isSelected
-                                                                        ? "border-black/20 text-black hover:bg-black/10"
-                                                                        : "border-white/10 text-white hover:border-white/30"
+                                                                ? "border-black bg-black text-white"
+                                                                : isSelected
+                                                                    ? "border-black/20 text-black hover:bg-black/10"
+                                                                    : "border-white/10 text-white hover:border-white/30"
                                                                 }`}
                                                         >
                                                             <p className="text-sm font-medium">
@@ -978,6 +1002,148 @@ function Booking() {
                                 className="rounded-full bg-white px-7 py-3 font-medium text-black transition hover:bg-white/90 disabled:cursor-not-allowed disabled:opacity-30"
                             >
                                 Continue
+                            </button>
+                        </div>
+                    </section>
+                )}
+
+                {/* STEP 8 */}
+                {step === 8 && (
+                    <section className="mt-10 rounded-3xl border border-white/10 bg-white/5 p-6">
+                        <h2 className="text-2xl font-semibold">
+                            Complete Payment
+                        </h2>
+
+                        <p className="mt-2 text-sm text-white/40">
+                            Review your booking and choose a payment method.
+                        </p>
+
+                        {/* Booking Summary */}
+                        <div className="mt-8 rounded-2xl border border-white/10 bg-black p-5">
+                            <p className="text-sm text-white/40">
+                                Booking Summary
+                            </p>
+
+                            <div className="mt-4 space-y-3 text-sm">
+                                <p>
+                                    <span className="text-white/40">Date:</span>{" "}
+                                    {date}
+                                </p>
+
+                                <p>
+                                    <span className="text-white/40">Time:</span>{" "}
+                                    {selectedSlot?.time}
+                                </p>
+
+                                <p>
+                                    <span className="text-white/40">Theatre:</span>{" "}
+                                    {selectedTheater?.name}
+                                </p>
+
+                                <p>
+                                    <span className="text-white/40">Name:</span>{" "}
+                                    {name}
+                                </p>
+
+                                <p>
+                                    <span className="text-white/40">Occasion:</span>{" "}
+                                    {occasion}
+                                </p>
+
+                                <p>
+                                    <span className="text-white/40">Cake:</span>{" "}
+                                    {selectedCake?.name} - {selectedCakeOption?.name}
+                                </p>
+
+                                <p>
+                                    <span className="text-white/40">Decor:</span>{" "}
+                                    {selectedDecor?.name} - {selectedDecorOption?.name}
+                                </p>
+
+                                <p>
+                                    <span className="text-white/40">Gift:</span>{" "}
+                                    {selectedGift?.name} - {selectedGiftOption?.name}
+                                </p>
+                            </div>
+                        </div>
+
+                        {/* Payment Method */}
+                        <div className="mt-8">
+                            <h3 className="text-lg font-semibold">
+                                Payment Method
+                            </h3>
+
+                            <div className="mt-5 grid gap-4 sm:grid-cols-2">
+                                <button
+                                    type="button"
+                                    onClick={() => setPaymentMethod("UPI")}
+                                    className={`rounded-2xl border p-5 text-left transition ${paymentMethod === "UPI"
+                                            ? "border-white bg-white text-black"
+                                            : "border-white/10 bg-black hover:border-white/30"
+                                        }`}
+                                >
+                                    <p className="font-medium">
+                                        UPI
+                                    </p>
+
+                                    <p
+                                        className={`mt-1 text-sm ${paymentMethod === "UPI"
+                                                ? "text-black/50"
+                                                : "text-white/40"
+                                            }`}
+                                    >
+                                        Pay using UPI
+                                    </p>
+                                </button>
+
+                                <button
+                                    type="button"
+                                    onClick={() => setPaymentMethod("CARD")}
+                                    className={`rounded-2xl border p-5 text-left transition ${paymentMethod === "CARD"
+                                            ? "border-white bg-white text-black"
+                                            : "border-white/10 bg-black hover:border-white/30"
+                                        }`}
+                                >
+                                    <p className="font-medium">
+                                        Card
+                                    </p>
+
+                                    <p
+                                        className={`mt-1 text-sm ${paymentMethod === "CARD"
+                                                ? "text-black/50"
+                                                : "text-white/40"
+                                            }`}
+                                    >
+                                        Pay using debit or credit card
+                                    </p>
+                                </button>
+                            </div>
+                        </div>
+
+                        {/* Buttons */}
+                        <div className="mt-8 flex justify-between">
+                            <button
+                                type="button"
+                                onClick={() => setStep(7)}
+                                className="rounded-full border border-white/20 px-7 py-3 text-sm hover:bg-white/10"
+                            >
+                                Back
+                            </button>
+
+                            <button
+                                type="button"
+                                disabled={!paymentMethod || paymentLoading}
+                                onClick={() => {
+                                    setPaymentLoading(true);
+
+                                    setTimeout(() => {
+                                        setPaymentLoading(false);
+                                        setStep(9);
+                                    }, 1500);
+                                }}
+                                className="rounded-full bg-white px-7 py-3 font-medium text-black transition hover:bg-white/90 disabled:cursor-not-allowed disabled:opacity-30"
+                            >
+                                {paymentLoading ? "Processing..." : "Pay Now"}
                             </button>
                         </div>
                     </section>

@@ -19,6 +19,16 @@ function Booking() {
     const [phone, setPhone] = useState("");
     const [email, setEmail] = useState("");
 
+    // Booking details
+    const [location, setLocation] = useState("");
+    const [guests, setGuests] = useState(1);
+    const [total, setTotal] = useState(0);
+
+    // Booking submission
+    const [booking, setBooking] = useState(null);
+    const [bookingLoading, setBookingLoading] = useState(false);
+    const [bookingError, setBookingError] = useState("");
+
     // Step 4
     const [occasion, setOccasion] = useState("");
 
@@ -196,6 +206,108 @@ function Booking() {
 
         fetchGifts();
     }, [step]);
+
+    //calculation
+    useEffect(() => {
+        const theaterPrice = selectedTheater?.basePrice || 0;
+        const cakePrice = selectedCakeOption?.price || 0;
+        const decorPrice = selectedDecorOption?.price || 0;
+        const giftPrice = selectedGiftOption?.price || 0;
+
+        const calculatedTotal =
+            theaterPrice + cakePrice + decorPrice + giftPrice;
+
+        setTotal(calculatedTotal);
+    }, [
+        selectedTheater,
+        selectedCakeOption,
+        selectedDecorOption,
+        selectedGiftOption,
+    ]);
+
+    const handlePayment = async () => {
+        try {
+            setPaymentLoading(true);
+            setBookingError("");
+
+            const token = localStorage.getItem("token");
+
+            if (!token) {
+                setBookingError("Please login before booking.");
+                return;
+            }
+
+            const bookingData = {
+                location,
+                date,
+                guests,
+                name,
+                phone,
+                email,
+                occasion,
+                total,
+                paymentMethod,
+
+                theaterId: selectedTheater._id,
+                slotId: selectedSlot._id,
+
+                cake: selectedCake && selectedCakeOption
+                    ? {
+                        name: selectedCake.name,
+                        option: selectedCakeOption.name,
+                        price: selectedCakeOption.price,
+                    }
+                    : null,
+
+                decor: selectedDecor && selectedDecorOption
+                    ? {
+                        name: selectedDecor.name,
+                        option: selectedDecorOption.name,
+                        price: selectedDecorOption.price,
+                    }
+                    : null,
+
+                gift: selectedGift && selectedGiftOption
+                    ? {
+                        name: selectedGift.name,
+                        option: selectedGiftOption.name,
+                        price: selectedGiftOption.price,
+                    }
+                    : null,
+            };
+
+            const response = await fetch(
+                "http://localhost:5000/api/bookings",
+                {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        Authorization: `Bearer ${token}`,
+                    },
+                    body: JSON.stringify(bookingData),
+                },
+            );
+
+            const data = await response.json();
+
+            if (!response.ok) {
+                setBookingError(
+                    data.message || "Failed to create booking.",
+                );
+                return;
+            }
+
+            console.log("Booking created:", data.booking);
+
+            setBooking(data.booking);
+            setStep(9);
+        } catch (error) {
+            console.error("Booking error:", error);
+            setBookingError("Unable to connect to server.");
+        } finally {
+            setPaymentLoading(false);
+        }
+    };
 
     return (
         <main className="min-h-screen bg-black px-6 py-16 text-white">
@@ -578,6 +690,36 @@ function Booking() {
                             Enter your contact information to continue.
                         </p>
 
+                        {/* Location */}
+                        <div>
+                            <label className="mb-2 block text-sm text-white/60">
+                                Location
+                            </label>
+
+                            <input
+                                type="text"
+                                value={location}
+                                onChange={(e) => setLocation(e.target.value)}
+                                placeholder="Enter your location"
+                                className="mt-2 w-full rounded-xl border border-white/10 bg-black px-4 py-3 text-white outline-none placeholder:text-white/30 focus:border-white/30"
+                            />
+                        </div>
+
+                        {/* Guests */}
+                        <div>
+                            <label className="mb-2 block text-sm text-white/60">
+                                Number of Guests
+                            </label>
+
+                            <input
+                                type="number"
+                                min="1"
+                                value={guests}
+                                onChange={(e) => setGuests(Number(e.target.value))}
+                                className="mt-2 w-full rounded-xl border border-white/10 bg-black px-4 py-3 text-white outline-none focus:border-white/30"
+                            />
+                        </div>
+
                         <div className="mt-8 space-y-5">
                             {/* Name */}
                             <div>
@@ -638,7 +780,13 @@ function Booking() {
                             <button
                                 type="button"
                                 onClick={() => setStep(4)}
-                                disabled={!name || !phone || !email}
+                                disabled={
+                                    !location ||
+                                    !guests ||
+                                    !name ||
+                                    !phone ||
+                                    !email
+                                }
                                 className="rounded-full bg-white px-7 py-3 font-medium text-black transition hover:bg-white/90 disabled:cursor-not-allowed disabled:opacity-30"
                             >
                                 Continue
@@ -1064,6 +1212,20 @@ function Booking() {
                                     <span className="text-white/40">Gift:</span>{" "}
                                     {selectedGift?.name} - {selectedGiftOption?.name}
                                 </p>
+                                <p>
+                                    <span className="text-white/40">Guests:</span>{" "}
+                                    {guests}
+                                </p>
+
+                                <p>
+                                    <span className="text-white/40">Location:</span>{" "}
+                                    {location}
+                                </p>
+
+                                <p>
+                                    <span className="text-white/40">Total:</span>{" "}
+                                    ₹{total}
+                                </p>
                             </div>
                         </div>
 
@@ -1078,8 +1240,8 @@ function Booking() {
                                     type="button"
                                     onClick={() => setPaymentMethod("UPI")}
                                     className={`rounded-2xl border p-5 text-left transition ${paymentMethod === "UPI"
-                                            ? "border-white bg-white text-black"
-                                            : "border-white/10 bg-black hover:border-white/30"
+                                        ? "border-white bg-white text-black"
+                                        : "border-white/10 bg-black hover:border-white/30"
                                         }`}
                                 >
                                     <p className="font-medium">
@@ -1088,8 +1250,8 @@ function Booking() {
 
                                     <p
                                         className={`mt-1 text-sm ${paymentMethod === "UPI"
-                                                ? "text-black/50"
-                                                : "text-white/40"
+                                            ? "text-black/50"
+                                            : "text-white/40"
                                             }`}
                                     >
                                         Pay using UPI
@@ -1100,8 +1262,8 @@ function Booking() {
                                     type="button"
                                     onClick={() => setPaymentMethod("CARD")}
                                     className={`rounded-2xl border p-5 text-left transition ${paymentMethod === "CARD"
-                                            ? "border-white bg-white text-black"
-                                            : "border-white/10 bg-black hover:border-white/30"
+                                        ? "border-white bg-white text-black"
+                                        : "border-white/10 bg-black hover:border-white/30"
                                         }`}
                                 >
                                     <p className="font-medium">
@@ -1110,8 +1272,8 @@ function Booking() {
 
                                     <p
                                         className={`mt-1 text-sm ${paymentMethod === "CARD"
-                                                ? "text-black/50"
-                                                : "text-white/40"
+                                            ? "text-black/50"
+                                            : "text-white/40"
                                             }`}
                                     >
                                         Pay using debit or credit card
@@ -1119,6 +1281,11 @@ function Booking() {
                                 </button>
                             </div>
                         </div>
+                        {bookingError && (
+                            <div className="mt-5 rounded-xl border border-red-500/30 bg-red-500/10 px-4 py-3 text-sm text-red-400">
+                                {bookingError}
+                            </div>
+                        )}
 
                         {/* Buttons */}
                         <div className="mt-8 flex justify-between">
@@ -1133,17 +1300,159 @@ function Booking() {
                             <button
                                 type="button"
                                 disabled={!paymentMethod || paymentLoading}
-                                onClick={() => {
-                                    setPaymentLoading(true);
-
-                                    setTimeout(() => {
-                                        setPaymentLoading(false);
-                                        setStep(9);
-                                    }, 1500);
-                                }}
+                                onClick={handlePayment}
                                 className="rounded-full bg-white px-7 py-3 font-medium text-black transition hover:bg-white/90 disabled:cursor-not-allowed disabled:opacity-30"
                             >
                                 {paymentLoading ? "Processing..." : "Pay Now"}
+                            </button>
+                        </div>
+                    </section>
+                )}
+
+                {/* STEP 9 - BOOKING CONFIRMATION */}
+                {step === 9 && booking && (
+                    <section className="mt-10 rounded-3xl border border-white/10 bg-white/5 p-8">
+                        {/* Success */}
+                        <div className="text-center">
+                            <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-white text-2xl text-black">
+                                ✓
+                            </div>
+
+                            <h2 className="mt-6 text-3xl font-semibold">
+                                Booking Confirmed
+                            </h2>
+
+                            <p className="mt-3 text-white/50">
+                                Your Luxe Screens experience has been successfully booked.
+                            </p>
+                        </div>
+
+                        {/* Booking ID */}
+                        <div className="mt-8 rounded-2xl border border-white/10 bg-black p-5 text-center">
+                            <p className="text-xs uppercase tracking-[0.2em] text-white/40">
+                                Booking ID
+                            </p>
+
+                            <p className="mt-2 break-all text-sm font-medium">
+                                {booking._id}
+                            </p>
+                        </div>
+
+                        {/* Booking Details */}
+                        <div className="mt-6 rounded-2xl border border-white/10 bg-black p-6">
+                            <h3 className="text-lg font-semibold">
+                                Booking Details
+                            </h3>
+
+                            <div className="mt-5 space-y-3 text-sm">
+                                <p>
+                                    <span className="text-white/40">Name:</span>{" "}
+                                    {booking.name}
+                                </p>
+
+                                <p>
+                                    <span className="text-white/40">Email:</span>{" "}
+                                    {booking.email}
+                                </p>
+
+                                <p>
+                                    <span className="text-white/40">Phone:</span>{" "}
+                                    {booking.phone}
+                                </p>
+
+                                <p>
+                                    <span className="text-white/40">Location:</span>{" "}
+                                    {booking.location}
+                                </p>
+
+                                <p>
+                                    <span className="text-white/40">Date:</span>{" "}
+                                    {booking.date
+                                        ? new Date(booking.date).toLocaleDateString()
+                                        : "-"}
+                                </p>
+
+                                <p>
+                                    <span className="text-white/40">Guests:</span>{" "}
+                                    {booking.guests}
+                                </p>
+
+                                <p>
+                                    <span className="text-white/40">Occasion:</span>{" "}
+                                    {booking.occasion}
+                                </p>
+
+                                <p>
+                                    <span className="text-white/40">Payment:</span>{" "}
+                                    {booking.paymentMethod}
+                                </p>
+
+                                <p>
+                                    <span className="text-white/40">Payment Status:</span>{" "}
+                                    {booking.paymentStatus}
+                                </p>
+
+                                <div className="my-4 border-t border-white/10" />
+
+                                <p className="text-lg font-semibold">
+                                    <span className="text-white/40">Total:</span>{" "}
+                                    ₹{booking.total}
+                                </p>
+                            </div>
+                        </div>
+
+                        {/* Add-ons */}
+                        {(booking.cake || booking.decor || booking.gift) && (
+                            <div className="mt-6 rounded-2xl border border-white/10 bg-black p-6">
+                                <h3 className="text-lg font-semibold">
+                                    Add-ons
+                                </h3>
+
+                                <div className="mt-5 space-y-3 text-sm">
+                                    {booking.cake && (
+                                        <p>
+                                            <span className="text-white/40">Cake:</span>{" "}
+                                            {booking.cake.name} - {booking.cake.option}
+                                        </p>
+                                    )}
+
+                                    {booking.decor && (
+                                        <p>
+                                            <span className="text-white/40">Decor:</span>{" "}
+                                            {booking.decor.name} - {booking.decor.option}
+                                        </p>
+                                    )}
+
+                                    {booking.gift && (
+                                        <p>
+                                            <span className="text-white/40">Gift:</span>{" "}
+                                            {booking.gift.name} - {booking.gift.option}
+                                        </p>
+                                    )}
+                                </div>
+                            </div>
+                        )}
+
+                        {/* Buttons */}
+                        <div className="mt-8 flex justify-center gap-4">
+                            <button
+                                type="button"
+                                onClick={() => {
+                                    window.location.href = "/";
+                                }}
+                                className="rounded-full border border-white/20 px-7 py-3 text-sm hover:bg-white/10"
+                            >
+                                Back to Home
+                            </button>
+
+                            <button
+                                type="button"
+                                onClick={() => {
+                                    window.location.href = "/profile";
+                                }}
+                                className="rounded-full bg-white px-7 py-3 text-sm font-medium text-black hover:bg-white/90"
+                            >
+                                View Profile
                             </button>
                         </div>
                     </section>

@@ -13,6 +13,7 @@ import Login from "./pages/Login.jsx";
 import Profile from "./pages/Profile.jsx";
 import ForgotPassword from "./pages/ForgotPassword.jsx";
 import ResetPassword from "./pages/ResetPassword.jsx";
+import ProtectedRoute from "./components/auth/ProtectedRoute.jsx";
 
 function AppContent() {
   const location = useLocation();
@@ -35,7 +36,9 @@ function AppContent() {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/gallery" element={<Gallery />} />
-        <Route path="/booking" element={<Booking />} />
+        <Route element={<ProtectedRoute />}>
+          <Route path="/booking" element={<Booking />} />
+        </Route>
         <Route path="/signup" element={<Signup />} />
         <Route path="/verify-otp" element={<VerifyOTP />} />
         <Route path="/login" element={<Login />} />

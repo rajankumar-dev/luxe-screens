@@ -12,6 +12,7 @@ import slotRoutes from "./routes/slotRoutes.js";
 import addOns from "./routes/addOnRoutes.js";
 import bookingRoutes from "./routes/bookingRoutes.js";
 import cartItemRoutes from "./routes/cartItemRoutes.js";
+import contactRoutes from "./routes/contactRoute.js";
 
 //auth routes
 import authRoutes from "./routes/authRoute.js";
@@ -41,6 +42,7 @@ app.use("/api/bookings", bookingRoutes);
 app.use("/api/cart-items", cartItemRoutes);
 app.use("/api/auth", authRoutes);
 app.use("/api/profile", profileRoutes);
+app.use("/api/contact", contactRoutes);
 
 // console.log("PORT:", process.env.PORT);
 // console.log("EMAIL_USER:", process.env.EMAIL_USER);

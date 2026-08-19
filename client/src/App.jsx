@@ -17,6 +17,7 @@ import ProtectedRoute from "./components/auth/ProtectedRoute.jsx";
 import MyBookings from "./pages/MyBookings.jsx";
 import Services from "./pages/Service.jsx";
 import FAQ from "./pages/Faq.jsx";
+import Contact from "./pages/Contact.jsx";
 
 function AppContent() {
   const location = useLocation();
@@ -41,6 +42,7 @@ function AppContent() {
         <Route path="/gallery" element={<Gallery />} />
         <Route path="/services" element={<Services />} />
         <Route path="/faq" element={<FAQ />} />
+        <Route path="/contact" element={<Contact />} />
         <Route element={<ProtectedRoute />}>
           <Route path="/booking" element={<Booking />} />
           <Route path="/my-bookings" element={<MyBookings />} />

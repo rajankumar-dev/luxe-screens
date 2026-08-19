@@ -115,6 +115,14 @@ const Profile = () => {
         }
     };
 
+    // Logout
+    const handleLogout = () => {
+        localStorage.removeItem("token");
+        localStorage.removeItem("user");
+
+        navigate("/");
+    };
+
     // Delete profile
     const handleDelete = async () => {
         const confirmDelete = window.confirm(
@@ -184,14 +192,26 @@ const Profile = () => {
         <main className="min-h-screen bg-black px-6 py-12 text-white">
             <div className="mx-auto max-w-2xl">
 
-                <div className="mb-10">
-                    <h1 className="text-3xl font-semibold">
-                        My Profile
-                    </h1>
+                {/* Header */}
+                <div className="mb-10 flex items-start justify-between gap-5">
+                    <div>
+                        <h1 className="text-3xl font-semibold">
+                            My Profile
+                        </h1>
 
-                    <p className="mt-2 text-sm text-white/50">
-                        Manage your account information.
-                    </p>
+                        <p className="mt-2 text-sm text-white/50">
+                            Manage your account information.
+                        </p>
+                    </div>
+
+                    {/* My Bookings */}
+                    <button
+                        type="button"
+                        onClick={() => navigate("/my-bookings")}
+                        className="rounded-full border border-white/20 px-5 py-2.5 text-sm transition hover:bg-white hover:text-black"
+                    >
+                        My Bookings
+                    </button>
                 </div>
 
                 {message && (
@@ -206,6 +226,7 @@ const Profile = () => {
                     </div>
                 )}
 
+                {/* Profile Form */}
                 <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-6">
                     <form onSubmit={handleUpdate} className="space-y-6">
 
@@ -263,10 +284,31 @@ const Profile = () => {
                             </span>
 
                             <span className="text-green-400">
-                                {profile?.isVerified ? "Verified" : "Not Verified"}
+                                {profile?.isVerified
+                                    ? "Verified"
+                                    : "Not Verified"}
                             </span>
                         </div>
                     </div>
+                </div>
+
+                {/* Logout */}
+                <div className="mt-6 rounded-2xl border border-white/10 p-6">
+                    <h2 className="text-lg font-medium">
+                        Account Actions
+                    </h2>
+
+                    <p className="mt-2 text-sm text-white/50">
+                        Sign out from your Luxe Screens account.
+                    </p>
+
+                    <button
+                        type="button"
+                        onClick={handleLogout}
+                        className="mt-4 rounded-full border border-white/20 px-5 py-3 text-sm transition hover:bg-white hover:text-black"
+                    >
+                        Logout
+                    </button>
                 </div>
 
                 {/* Delete */}

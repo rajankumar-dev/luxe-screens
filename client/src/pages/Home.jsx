@@ -1,7 +1,70 @@
-import React from 'react'
+
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 
 const Home = () => {
+    const [theaters, setTheaters] = useState([]);
+    const [theatersLoading, setTheatersLoading] = useState(true);
+
+    // AddOns
+    const [addons, setAddons] = useState([]);
+    const [addonsLoading, setAddonsLoading] = useState(true);
+
+    useEffect(() => {
+        const fetchTheaters = async () => {
+            try {
+                const response = await fetch(
+                    "http://localhost:5000/api/theaters"
+                );
+
+                const data = await response.json();
+
+                if (!response.ok) {
+                    console.error(
+                        data.message || "Failed to fetch theaters"
+                    );
+                    return;
+                }
+
+                setTheaters(data.theaters || []);
+            } catch (error) {
+                console.error("Failed to fetch theaters:", error);
+            } finally {
+                setTheatersLoading(false);
+            }
+        };
+
+        fetchTheaters();
+    }, []);
+
+    // Fetch AddOns
+    useEffect(() => {
+        const fetchAddons = async () => {
+            try {
+                const response = await fetch(
+                    "http://localhost:5000/api/addons"
+                );
+
+                const data = await response.json();
+
+                if (!response.ok) {
+                    console.error(
+                        data.message || "Failed to fetch addons"
+                    );
+                    return;
+                }
+
+                setAddons(data.addons || []);
+            } catch (error) {
+                console.error("Failed to fetch addons:", error);
+            } finally {
+                setAddonsLoading(false);
+            }
+        };
+
+        fetchAddons();
+    }, []);
+
     return (
         <>
             {/* Hero */}
@@ -17,12 +80,14 @@ const Home = () => {
                             <br />
                             Your Screen.
                             <br />
-                            <span className="text-white/50">Your Experience.</span>
+                            <span className="text-white/50">
+                                Your Experience.
+                            </span>
                         </h2>
 
                         <p className="mt-6 max-w-xl text-lg leading-8 text-white/60">
-                            A private theatre experience designed around your special
-                            moments.
+                            A private theatre experience designed around your
+                            special moments.
                         </p>
 
                         <div className="mt-8 flex flex-wrap gap-4">
@@ -33,9 +98,12 @@ const Home = () => {
                                 Book Your Experience
                             </Link>
 
-                            <button className="rounded-full border border-white/20 px-7 py-3 font-medium hover:bg-white/10">
+                            <a
+                                href="#gallery"
+                                className="rounded-full border border-white/20 px-7 py-3 font-medium hover:bg-white/10"
+                            >
                                 Explore Theatres
-                            </button>
+                            </a>
                         </div>
                     </div>
 
@@ -63,7 +131,10 @@ const Home = () => {
             </section>
 
             {/* Services */}
-            <section id="services" className="border-t border-white/10 px-6 py-24">
+            <section
+                id="services"
+                className="border-t border-white/10 px-6 py-24"
+            >
                 <div className="mx-auto max-w-7xl">
                     <div className="max-w-2xl">
                         <p className="text-sm uppercase tracking-[0.3em] text-white/40">
@@ -75,39 +146,78 @@ const Home = () => {
                         </h2>
                     </div>
 
-                    <div className="mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-                        {[
-                            "Private Theatre",
-                            "Celebrations",
-                            "Cakes",
-                            "Decor",
-                            "Gifts",
-                            "Special Occasions",
-                        ].map((service) => (
-                            <div
-                                key={service}
-                                className="rounded-2xl border border-white/10 bg-white/5 p-7 transition hover:-translate-y-1 hover:bg-white/10"
-                            >
-                                <div className="mb-12 h-10 w-10 rounded-full border border-white/20" />
+                    {addonsLoading ? (
+                        <div className="mt-12">
+                            <p className="text-sm text-white/40">
+                                Loading services...
+                            </p>
+                        </div>
+                    ) : addons.length === 0 ? (
+                        <div className="mt-12 rounded-3xl border border-white/10 bg-white/5 p-10 text-center">
+                            <p className="text-white/40">
+                                No services available.
+                            </p>
+                        </div>
+                    ) : (
+                        <div className="mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+                            {addons.map((addon) => (
+                                <div
+                                    key={addon._id}
+                                    className="rounded-2xl border border-white/10 bg-white/5 p-7 transition hover:-translate-y-1 hover:bg-white/10"
+                                >
+                                    <div className="mb-8 flex items-center justify-between">
+                                        <div className="h-10 w-10 rounded-full border border-white/20" />
 
-                                <h3 className="text-xl font-semibold">{service}</h3>
+                                        <span className="rounded-full border border-white/10 px-3 py-1 text-xs text-white/40">
+                                            {addon.category}
+                                        </span>
+                                    </div>
 
-                                <p className="mt-3 text-sm leading-6 text-white/50">
-                                    Experience designed for your special moment.
-                                </p>
-                            </div>
-                        ))}
-                    </div>
+                                    <h3 className="text-xl font-semibold">
+                                        {addon.name}
+                                    </h3>
+
+                                    <p className="mt-3 text-sm leading-6 text-white/50">
+                                        Experience designed for your special
+                                        moment.
+                                    </p>
+
+                                    {addon.options &&
+                                        addon.options.length > 0 && (
+                                            <div className="mt-5 space-y-2">
+                                                {addon.options.map((option) => (
+                                                    <div
+                                                        key={option._id}
+                                                        className="flex items-center justify-between rounded-lg border border-white/10 bg-black/30 px-3 py-2"
+                                                    >
+                                                        <span className="text-sm text-white/70">
+                                                            {option.name}
+                                                        </span>
+
+                                                        <span className="text-sm text-white/50">
+                                                            ₹{option.price}
+                                                        </span>
+                                                    </div>
+                                                ))}
+                                            </div>
+                                        )}
+                                </div>
+                            ))}
+                        </div>
+                    )}
                 </div>
             </section>
 
             {/* Gallery Preview */}
-            <section id="gallery" className="border-t border-white/10 px-6 py-24">
+            <section
+                id="gallery"
+                className="border-t border-white/10 px-6 py-24"
+            >
                 <div className="mx-auto max-w-7xl">
                     <div className="flex flex-col justify-between gap-5 sm:flex-row sm:items-end">
                         <div>
                             <p className="text-sm uppercase tracking-[0.3em] text-white/40">
-                                Gallery
+                                Our Theatres
                             </p>
 
                             <h2 className="mt-3 text-4xl font-bold">
@@ -123,23 +233,70 @@ const Home = () => {
                         </Link>
                     </div>
 
-                    <div className="mt-12 grid gap-5 md:grid-cols-3">
-                        {[1, 2, 3].map((item) => (
-                            <div
-                                key={item}
-                                className="flex aspect-[4/5] items-end rounded-3xl border border-white/10 bg-white/5 p-6"
-                            >
-                                <span className="text-sm text-white/40">
-                                    Theatre {String(item).padStart(2, "0")}
-                                </span>
-                            </div>
-                        ))}
-                    </div>
+                    {/* Loading */}
+                    {theatersLoading ? (
+                        <div className="mt-12">
+                            <p className="text-sm text-white/40">
+                                Loading theatres...
+                            </p>
+                        </div>
+                    ) : theaters.length === 0 ? (
+                        <div className="mt-12 rounded-3xl border border-white/10 bg-white/5 p-10 text-center">
+                            <p className="text-white/40">
+                                No theatres available.
+                            </p>
+                        </div>
+                    ) : (
+                        <div className="mt-12 grid gap-5 md:grid-cols-3">
+                            {theaters.map((theater) => (
+                                <div
+                                    key={theater._id}
+                                    className="flex aspect-[4/5] flex-col justify-end rounded-3xl border border-white/10 bg-white/5 p-6 transition hover:-translate-y-1 hover:bg-white/10"
+                                >
+                                    <p className="text-xs uppercase tracking-[0.2em] text-white/40">
+                                        Private Theatre
+                                    </p>
+
+                                    <h3 className="mt-2 text-2xl font-semibold">
+                                        {theater.name}
+                                    </h3>
+
+                                    <div className="mt-4 space-y-1 text-sm text-white/50">
+                                        <p>
+                                            Base Price: ₹{theater.basePrice}
+                                        </p>
+
+                                        <p>
+                                            Capacity: {theater.maxCapacity}
+                                        </p>
+
+                                        <p>
+                                            Screen: {theater.screen}
+                                        </p>
+
+                                        <p>
+                                            Sound: {theater.sound}
+                                        </p>
+                                    </div>
+
+                                    <Link
+                                        to="/booking"
+                                        className="mt-6 w-fit rounded-full border border-white/20 px-5 py-2 text-sm hover:bg-white hover:text-black"
+                                    >
+                                        Book This Theatre
+                                    </Link>
+                                </div>
+                            ))}
+                        </div>
+                    )}
                 </div>
             </section>
 
             {/* FAQ */}
-            <section id="faq" className="border-t border-white/10 px-6 py-24">
+            <section
+                id="faq"
+                className="border-t border-white/10 px-6 py-24"
+            >
                 <div className="mx-auto max-w-4xl">
                     <p className="text-sm uppercase tracking-[0.3em] text-white/40">
                         FAQ
@@ -161,8 +318,8 @@ const Home = () => {
                                 </summary>
 
                                 <p className="mt-4 max-w-2xl text-sm leading-7 text-white/50">
-                                    More information about this experience will be provided
-                                    here.
+                                    More information about this experience
+                                    will be provided here.
                                 </p>
                             </details>
                         ))}
@@ -171,7 +328,10 @@ const Home = () => {
             </section>
 
             {/* Contact */}
-            <section id="contact" className="border-t border-white/10 px-6 py-24">
+            <section
+                id="contact"
+                className="border-t border-white/10 px-6 py-24"
+            >
                 <div className="mx-auto max-w-7xl rounded-3xl border border-white/10 bg-white/5 px-6 py-16 text-center">
                     <p className="text-sm uppercase tracking-[0.3em] text-white/40">
                         Contact
@@ -182,8 +342,8 @@ const Home = () => {
                     </h2>
 
                     <p className="mx-auto mt-5 max-w-xl text-white/50">
-                        Get in touch with Luxe Screens and plan your private theatre
-                        experience.
+                        Get in touch with Luxe Screens and plan your private
+                        theatre experience.
                     </p>
 
                     <button className="mt-8 rounded-full bg-white px-7 py-3 font-medium text-black hover:bg-white/90">
@@ -191,10 +351,9 @@ const Home = () => {
                     </button>
                 </div>
             </section>
-
-
         </>
-    )
-}
+    );
+};
 
-export default Home
+export default Home;
+

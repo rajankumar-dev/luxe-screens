@@ -15,6 +15,8 @@ import ForgotPassword from "./pages/ForgotPassword.jsx";
 import ResetPassword from "./pages/ResetPassword.jsx";
 import ProtectedRoute from "./components/auth/ProtectedRoute.jsx";
 import MyBookings from "./pages/MyBookings.jsx";
+import Services from "./pages/Service.jsx";
+import FAQ from "./pages/Faq.jsx";
 
 function AppContent() {
   const location = useLocation();
@@ -37,6 +39,8 @@ function AppContent() {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/gallery" element={<Gallery />} />
+        <Route path="/services" element={<Services />} />
+        <Route path="/faq" element={<FAQ />} />
         <Route element={<ProtectedRoute />}>
           <Route path="/booking" element={<Booking />} />
           <Route path="/my-bookings" element={<MyBookings />} />

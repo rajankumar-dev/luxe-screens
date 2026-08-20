@@ -1,9 +1,10 @@
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const Header = () => {
     const [user, setUser] = useState(null);
     const [menuOpen, setMenuOpen] = useState(false);
+    const navigate = useNavigate();
 
     useEffect(() => {
         const storedUser = localStorage.getItem("user");

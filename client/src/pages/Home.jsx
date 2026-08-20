@@ -2,6 +2,15 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 
+//hero slider images
+import hero1 from "../assets/images/hero-1.jpg";
+import hero2 from "../assets/images/hero-2.jpg";
+import hero3 from "../assets/images/hero-3.jpg";
+
+//theater images
+import luxeGold from "../assets/images/theaters/luxe-gold.jpg";
+import luxePremium from "../assets/images/theaters/luxe-premium.jpg";
+
 const Home = () => {
     const [theaters, setTheaters] = useState([]);
     const [theatersLoading, setTheatersLoading] = useState(true);
@@ -9,6 +18,17 @@ const Home = () => {
     // AddOns
     const [addons, setAddons] = useState([]);
     const [addonsLoading, setAddonsLoading] = useState(true);
+    const [currentHero, setCurrentHero] = useState(0);
+
+    const heroImages = [hero1, hero2, hero3];
+
+    useEffect(() => {
+        const interval = setInterval(() => {
+            setCurrentHero((prev) => (prev + 1) % heroImages.length);
+        }, 4000);
+
+        return () => clearInterval(interval);
+    }, []);
 
     useEffect(() => {
         const fetchTheaters = async () => {
@@ -98,32 +118,49 @@ const Home = () => {
                                 Book Your Experience
                             </Link>
 
-                            <a
-                                href="#gallery"
+                            <Link
+                                to="/gallery"
                                 className="rounded-full border border-white/20 px-7 py-3 font-medium hover:bg-white/10"
                             >
                                 Explore Theatres
-                            </a>
+                            </Link>
                         </div>
                     </div>
 
                     {/* Hero slideshow placeholder */}
                     <div className="relative h-[450px] overflow-hidden rounded-3xl border border-white/10 bg-white/5">
-                        <div className="absolute inset-0 flex items-center justify-center">
-                            <p className="text-sm uppercase tracking-[0.25em] text-white/30">
-                                Hero Slideshow
-                            </p>
-                        </div>
+                        {heroImages.map((image, index) => (
+                            <img
+                                key={image}
+                                src={image}
+                                alt={`Luxe Screens theatre experience ${index + 1}`}
+                                className={`absolute inset-0 h-full w-full object-cover transition-opacity duration-1000 ${currentHero === index
+                                    ? "opacity-100"
+                                    : "opacity-0"
+                                    }`}
+                            />
+                        ))}
+
+                        <div className="absolute inset-0 bg-black/30" />
 
                         <div className="absolute bottom-6 left-6 right-6 flex items-center justify-between">
-                            <span className="text-sm text-white/60">
-                                01 / 03
+                            <span className="text-sm text-white/80">
+                                {String(currentHero + 1).padStart(2, "0")} / 03
                             </span>
 
                             <div className="flex gap-2">
-                                <span className="h-2 w-2 rounded-full bg-white" />
-                                <span className="h-2 w-2 rounded-full bg-white/30" />
-                                <span className="h-2 w-2 rounded-full bg-white/30" />
+                                {heroImages.map((_, index) => (
+                                    <button
+                                        key={index}
+                                        type="button"
+                                        onClick={() => setCurrentHero(index)}
+                                        aria-label={`Show slide ${index + 1}`}
+                                        className={`h-2 w-2 rounded-full transition ${currentHero === index
+                                            ? "bg-white"
+                                            : "bg-white/30"
+                                            }`}
+                                    />
+                                ))}
                             </div>
                         </div>
                     </div>
@@ -247,44 +284,60 @@ const Home = () => {
                             </p>
                         </div>
                     ) : (
-                        <div className="mt-12 grid gap-5 md:grid-cols-3">
+                        <div className="mt-12 grid gap-5 md:grid-cols-2">
                             {theaters.map((theater) => (
                                 <div
                                     key={theater._id}
-                                    className="flex aspect-[4/5] flex-col justify-end rounded-3xl border border-white/10 bg-white/5 p-6 transition hover:-translate-y-1 hover:bg-white/10"
+                                    className="overflow-hidden rounded-3xl border border-white/10 bg-white/5 transition hover:-translate-y-1 hover:bg-white/10"
                                 >
-                                    <p className="text-xs uppercase tracking-[0.2em] text-white/40">
-                                        Private Theatre
-                                    </p>
-
-                                    <h3 className="mt-2 text-2xl font-semibold">
-                                        {theater.name}
-                                    </h3>
-
-                                    <div className="mt-4 space-y-1 text-sm text-white/50">
-                                        <p>
-                                            Base Price: ₹{theater.basePrice}
-                                        </p>
-
-                                        <p>
-                                            Capacity: {theater.maxCapacity}
-                                        </p>
-
-                                        <p>
-                                            Screen: {theater.screen}
-                                        </p>
-
-                                        <p>
-                                            Sound: {theater.sound}
-                                        </p>
+                                    {/* Theatre Image */}
+                                    <div className="h-64 overflow-hidden">
+                                        <img
+                                            src={
+                                                theater.name === "Luxe Gold"
+                                                    ? luxeGold
+                                                    : luxePremium
+                                            }
+                                            alt={theater.name}
+                                            className="h-full w-full object-cover transition duration-500 hover:scale-105"
+                                        />
                                     </div>
 
-                                    <Link
-                                        to="/booking"
-                                        className="mt-6 w-fit rounded-full border border-white/20 px-5 py-2 text-sm hover:bg-white hover:text-black"
-                                    >
-                                        Book This Theatre
-                                    </Link>
+                                    {/* Theatre Content */}
+                                    <div className="p-6">
+                                        <p className="text-xs uppercase tracking-[0.2em] text-white/40">
+                                            Private Theatre
+                                        </p>
+
+                                        <h3 className="mt-2 text-2xl font-semibold">
+                                            {theater.name}
+                                        </h3>
+
+                                        <div className="mt-4 grid grid-cols-2 gap-3 text-sm text-white/50">
+                                            <p>
+                                                Base Price: ₹{theater.basePrice}
+                                            </p>
+
+                                            <p>
+                                                Capacity: {theater.maxCapacity}
+                                            </p>
+
+                                            <p>
+                                                Screen: {theater.screen}
+                                            </p>
+
+                                            <p>
+                                                Sound: {theater.sound}
+                                            </p>
+                                        </div>
+
+                                        <Link
+                                            to="/booking"
+                                            className="mt-6 inline-block rounded-full border border-white/20 px-5 py-2 text-sm hover:bg-white hover:text-black"
+                                        >
+                                            Book This Theatre
+                                        </Link>
+                                    </div>
                                 </div>
                             ))}
                         </div>
@@ -346,9 +399,12 @@ const Home = () => {
                         theatre experience.
                     </p>
 
-                    <button className="mt-8 rounded-full bg-white px-7 py-3 font-medium text-black hover:bg-white/90">
+                    <Link
+                        to="/contact"
+                        className="mt-8 inline-block rounded-full bg-white px-7 py-3 font-medium text-black hover:bg-white/90"
+                    >
                         Contact Us
-                    </button>
+                    </Link>
                 </div>
             </section>
         </>

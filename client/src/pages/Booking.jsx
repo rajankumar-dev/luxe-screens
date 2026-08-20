@@ -54,6 +54,14 @@ function Booking() {
     const [paymentMethod, setPaymentMethod] = useState("");
     const [paymentLoading, setPaymentLoading] = useState(false);
 
+    // Coupon
+    const [couponCode, setCouponCode] = useState("");
+    const [couponDiscount, setCouponDiscount] = useState(0);
+    const [couponFinalAmount, setCouponFinalAmount] = useState(0);
+    const [couponLoading, setCouponLoading] = useState(false);
+    const [couponError, setCouponError] = useState("");
+    const [couponApplied, setCouponApplied] = useState(false);
+
     // Fetch slots
     useEffect(() => {
         const fetchSlots = async () => {
@@ -218,12 +226,71 @@ function Booking() {
             theaterPrice + cakePrice + decorPrice + giftPrice;
 
         setTotal(calculatedTotal);
+
+        // Reset coupon when booking amount changes
+        setCouponDiscount(0);
+        setCouponFinalAmount(0);
+        setCouponApplied(false);
+        setCouponError("");
     }, [
         selectedTheater,
         selectedCakeOption,
         selectedDecorOption,
         selectedGiftOption,
     ]);
+
+    const handleApplyCoupon = async () => {
+        if (!couponCode.trim()) {
+            setCouponError("Please enter a coupon code.");
+            return;
+        }
+
+        try {
+            setCouponLoading(true);
+            setCouponError("");
+
+            const response = await fetch(
+                "http://localhost:5000/api/coupons/validate",
+                {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({
+                        code: couponCode,
+                        amount: total,
+                    }),
+                }
+            );
+
+            const data = await response.json();
+
+            if (!response.ok) {
+                setCouponDiscount(0);
+                setCouponFinalAmount(0);
+                setCouponApplied(false);
+
+                setCouponError(
+                    data.message || "Invalid coupon code."
+                );
+
+                return;
+            }
+
+            setCouponDiscount(data.discount);
+            setCouponFinalAmount(data.finalAmount);
+            setCouponApplied(true);
+            setCouponError("");
+        } catch (error) {
+            console.error("Coupon error:", error);
+
+            setCouponError(
+                "Unable to validate coupon."
+            );
+        } finally {
+            setCouponLoading(false);
+        }
+    };
 
     const handlePayment = async () => {
         try {
@@ -245,7 +312,7 @@ function Booking() {
                 phone,
                 email,
                 occasion,
-                total,
+                total: couponApplied ? couponFinalAmount : total,
                 paymentMethod,
 
                 theaterId: selectedTheater._id,
@@ -1223,10 +1290,76 @@ function Booking() {
                                 </p>
 
                                 <p>
-                                    <span className="text-white/40">Total:</span>{" "}
+                                    <span className="text-white/40">Subtotal:</span>{" "}
                                     ₹{total}
                                 </p>
+
+                                {couponApplied && (
+                                    <p className="text-green-400">
+                                        <span className="text-white/40">
+                                            Discount:
+                                        </span>{" "}
+                                        -₹{couponDiscount}
+                                    </p>
+                                )}
+
+                                <p className="text-lg font-semibold">
+                                    <span className="text-white/40">Total:</span>{" "}
+                                    ₹{couponApplied ? couponFinalAmount : total}
+                                </p>
                             </div>
+                        </div>
+
+                        {/* Coupon */}
+                        <div className="mt-8">
+                            <h3 className="text-lg font-semibold">
+                                Apply Coupon
+                            </h3>
+
+                            <div className="mt-4 flex flex-col gap-3 sm:flex-row">
+                                <input
+                                    type="text"
+                                    value={couponCode}
+                                    onChange={(e) => {
+                                        setCouponCode(e.target.value.toUpperCase());
+                                        setCouponError("");
+                                    }}
+                                    placeholder="Enter coupon code"
+                                    disabled={couponApplied || couponLoading}
+                                    className="w-full rounded-xl border border-white/10 bg-black px-4 py-3 text-sm uppercase text-white outline-none placeholder:text-white/30 focus:border-white/30"
+                                />
+
+                                <button
+                                    type="button"
+                                    onClick={handleApplyCoupon}
+                                    disabled={
+                                        !couponCode.trim() ||
+                                        couponLoading ||
+                                        couponApplied
+                                    }
+                                    className="rounded-xl bg-white px-6 py-3 text-sm font-medium text-black transition hover:bg-white/90 disabled:cursor-not-allowed disabled:opacity-30"
+                                >
+                                    {couponLoading
+                                        ? "Checking..."
+                                        : couponApplied
+                                            ? "Applied"
+                                            : "Apply"}
+                                </button>
+                            </div>
+
+                            {couponError && (
+                                <p className="mt-3 text-sm text-red-400">
+                                    {couponError}
+                                </p>
+                            )}
+
+                            {couponApplied && (
+                                <div className="mt-4 rounded-xl border border-green-500/20 bg-green-500/10 px-4 py-3">
+                                    <p className="text-sm text-green-400">
+                                        Coupon {couponCode} applied successfully.
+                                    </p>
+                                </div>
+                            )}
                         </div>
 
                         {/* Payment Method */}

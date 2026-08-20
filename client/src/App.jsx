@@ -19,6 +19,7 @@ import Services from "./pages/Service.jsx";
 import FAQ from "./pages/Faq.jsx";
 import Contact from "./pages/Contact.jsx";
 import AIPlanner from "./pages/AIPlanner.jsx";
+import Waitlist from "./pages/Waitlist.jsx";
 
 function AppContent() {
   const location = useLocation();
@@ -61,6 +62,7 @@ function AppContent() {
           element={<ResetPassword />}
         />
         <Route path="/ai-planner" element={<AIPlanner />} />
+        <Route path="/waitlist" element={<Waitlist />} />
 
       </Routes>
 

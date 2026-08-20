@@ -1,5 +1,6 @@
 import express from "express";
 import {
+  confirmBooking,
   createBooking,
   getBookingById,
   getMyBookings,
@@ -13,4 +14,6 @@ router.post("/", authMiddleware, createBooking);
 router.get("/", authMiddleware, getMyBookings);
 
 router.get("/:id", authMiddleware, getBookingById);
+router.post("/:id/confirm", authMiddleware, confirmBooking);
+
 export default router;

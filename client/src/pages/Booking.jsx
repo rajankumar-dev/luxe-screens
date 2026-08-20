@@ -343,6 +343,7 @@ function Booking() {
                     : null,
             };
 
+            // 1. Create booking
             const response = await fetch(
                 "http://localhost:5000/api/bookings",
                 {
@@ -366,8 +367,38 @@ function Booking() {
 
             console.log("Booking created:", data.booking);
 
-            setBooking(data.booking);
+            // 2. Confirm booking
+            const confirmResponse = await fetch(
+                `http://localhost:5000/api/bookings/${data.booking._id}/confirm`,
+                {
+                    method: "POST",
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                },
+            );
+
+            const confirmData = await confirmResponse.json();
+
+            if (!confirmResponse.ok) {
+                setBookingError(
+                    confirmData.message ||
+                    "Booking created but confirmation failed.",
+                );
+                return;
+            }
+
+            console.log(
+                "Booking confirmed:",
+                confirmData.booking,
+            );
+
+            // 3. Store confirmed booking
+            setBooking(confirmData.booking);
+
+            // 4. Go to confirmation step
             setStep(9);
+
         } catch (error) {
             console.error("Booking error:", error);
             setBookingError("Unable to connect to server.");

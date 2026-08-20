@@ -102,3 +102,42 @@ export const getBookingById = async (req, res) => {
     });
   }
 };
+
+export const confirmBooking = async (req, res) => {
+  try {
+    const booking = await Booking.findOne({
+      _id: req.params.id,
+      userId: req.user.userId,
+    });
+
+    if (!booking) {
+      return res.status(404).json({
+        success: false,
+        message: "Booking not found",
+      });
+    }
+
+    if (booking.paymentStatus === "PAID") {
+      return res.status(400).json({
+        success: false,
+        message: "Booking is already confirmed.",
+      });
+    }
+
+    booking.paymentStatus = "PAID";
+
+    await booking.save();
+
+    res.status(200).json({
+      success: true,
+      message: "Booking confirmed successfully.",
+      booking,
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: "Failed to confirm booking",
+      error: error.message,
+    });
+  }
+};

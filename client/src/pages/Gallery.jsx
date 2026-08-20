@@ -2,6 +2,9 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 
+import luxeGold from "../assets/images/theaters/luxe-gold.jpg";
+import luxePremium from "../assets/images/theaters/luxe-premium.jpg";
+
 const Gallery = () => {
     const [theaters, setTheaters] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -89,10 +92,18 @@ const Gallery = () => {
                                 className="overflow-hidden rounded-3xl border border-white/10 bg-white/5 transition hover:-translate-y-1 hover:bg-white/10"
                             >
                                 {/* Image Placeholder */}
-                                <div className="flex h-72 items-center justify-center bg-white/[0.03]">
-                                    <p className="text-sm uppercase tracking-[0.25em] text-white/20">
-                                        {theater.name}
-                                    </p>
+
+
+                                <div className="h-72 overflow-hidden bg-white/[0.03]">
+                                    <img
+                                        src={
+                                            theater.name === "Luxe Gold"
+                                                ? luxeGold
+                                                : luxePremium
+                                        }
+                                        alt={theater.name}
+                                        className="h-full w-full object-cover transition duration-500 hover:scale-105"
+                                    />
                                 </div>
 
                                 {/* Content */}

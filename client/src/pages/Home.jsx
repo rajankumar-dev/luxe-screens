@@ -119,6 +119,13 @@ const Home = () => {
                             </Link>
 
                             <Link
+                                to="/ai-planner"
+                                className="rounded-full border border-white/20 px-7 py-3 font-medium hover:bg-white/10"
+                            >
+                                Plan With AI
+                            </Link>
+
+                            <Link
                                 to="/gallery"
                                 className="rounded-full border border-white/20 px-7 py-3 font-medium hover:bg-white/10"
                             >

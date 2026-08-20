@@ -48,6 +48,13 @@ const Header = () => {
                             Gallery
                         </Link>
 
+                        <Link
+                            to="/ai-planner"
+                            className="text-sm text-white/80 hover:text-white"
+                        >
+                            AI Planner
+                        </Link>
+
                         <Link to="/faq" className="text-sm text-white/80 hover:text-white">
                             FAQ
                         </Link>
@@ -110,6 +117,13 @@ const Header = () => {
 
                         <Link to="/gallery" onClick={closeMenu} className="text-sm text-white/80 hover:text-white">
                             Gallery
+                        </Link>
+                        <Link
+                            to="/ai-planner"
+                            onClick={closeMenu}
+                            className="text-sm text-white/80 hover:text-white"
+                        >
+                            AI Planner
                         </Link>
 
                         <Link to="/faq" onClick={closeMenu} className="text-sm text-white/80 hover:text-white">

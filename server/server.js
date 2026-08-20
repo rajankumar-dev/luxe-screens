@@ -13,6 +13,8 @@ import addOns from "./routes/addOnRoutes.js";
 import bookingRoutes from "./routes/bookingRoutes.js";
 import cartItemRoutes from "./routes/cartItemRoutes.js";
 import contactRoutes from "./routes/contactRoute.js";
+import waitlistRoutes from "./routes/waitlistRoutes.js";
+import couponRoutes from "./routes/couponRoutes.js";
 
 //auth routes
 import authRoutes from "./routes/authRoute.js";
@@ -46,6 +48,8 @@ app.use("/api/cart-items", cartItemRoutes);
 app.use("/api/auth", authRoutes);
 app.use("/api/profile", profileRoutes);
 app.use("/api/contact", contactRoutes);
+app.use("/api/waitlist", waitlistRoutes);
+app.use("/api/coupons", couponRoutes);
 
 //ai test api
 app.use("/api/ai", aiRoutes);

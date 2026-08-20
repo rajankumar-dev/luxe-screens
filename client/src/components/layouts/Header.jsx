@@ -62,6 +62,12 @@ const Header = () => {
                         <Link to="/contact" className="text-sm text-white/80 hover:text-white">
                             Contact
                         </Link>
+                        <Link
+                            to="/waitlist"
+                            className="text-sm text-white/80 hover:text-white"
+                        >
+                            Waitlist
+                        </Link>
                     </div>
 
                     {/* Desktop Actions */}
@@ -128,6 +134,13 @@ const Header = () => {
 
                         <Link to="/faq" onClick={closeMenu} className="text-sm text-white/80 hover:text-white">
                             FAQ
+                        </Link>
+                        <Link
+                            to="/waitlist"
+                            onClick={closeMenu}
+                            className="text-sm text-white/80 hover:text-white"
+                        >
+                            Waitlist
                         </Link>
 
                         <Link to="/contact" onClick={closeMenu} className="text-sm text-white/80 hover:text-white">

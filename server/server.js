@@ -18,6 +18,9 @@ import contactRoutes from "./routes/contactRoute.js";
 import authRoutes from "./routes/authRoute.js";
 import profileRoutes from "./routes/profileRoutes.js";
 
+//ai test route
+import aiRoutes from "./routes/aiRoutes.js";
+
 //middlewares
 app.use(express.json());
 app.use(cors());
@@ -43,6 +46,9 @@ app.use("/api/cart-items", cartItemRoutes);
 app.use("/api/auth", authRoutes);
 app.use("/api/profile", profileRoutes);
 app.use("/api/contact", contactRoutes);
+
+//ai test api
+app.use("/api/ai", aiRoutes);
 
 // console.log("PORT:", process.env.PORT);
 // console.log("EMAIL_USER:", process.env.EMAIL_USER);

@@ -18,6 +18,7 @@ import MyBookings from "./pages/MyBookings.jsx";
 import Services from "./pages/Service.jsx";
 import FAQ from "./pages/Faq.jsx";
 import Contact from "./pages/Contact.jsx";
+import AIPlanner from "./pages/AIPlanner.jsx";
 
 function AppContent() {
   const location = useLocation();
@@ -59,6 +60,7 @@ function AppContent() {
           path="/reset-password"
           element={<ResetPassword />}
         />
+        <Route path="/ai-planner" element={<AIPlanner />} />
 
       </Routes>
 

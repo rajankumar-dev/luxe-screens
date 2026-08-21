@@ -2,12 +2,6 @@
 
 Luxe Screens is a premium private theatre booking web application where users can explore luxury theatre experiences, select a theatre, choose a date and time slot, customize their experience with cakes, decorations and gifts, apply coupons, make payments and manage their bookings.
 
-## Live Demo
-
-Live Website: [YOUR_VERCEL_URL](https://luxe-screens-rho.vercel.app/)
-
----
-
 ## Features
 
 ### Authentication

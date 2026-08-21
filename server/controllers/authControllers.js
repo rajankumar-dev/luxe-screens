@@ -28,47 +28,47 @@ export const register = async (req, res) => {
     // 3. Hash password
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    // 4. Generate 6-digit OTP
-    const otp = Math.floor(100000 + Math.random() * 900000).toString();
+    // // 4. Generate 6-digit OTP
+    // const otp = Math.floor(100000 + Math.random() * 900000).toString();
 
-    // 5. OTP expires after 10 minutes
-    const otpExpiresAt = new Date(Date.now() + 10 * 60 * 1000);
+    // // 5. OTP expires after 10 minutes
+    // const otpExpiresAt = new Date(Date.now() + 10 * 60 * 1000);
 
     // 6. Create user
     const user = await User.create({
       name,
       email,
       password: hashedPassword,
-      otp,
-      otpExpiresAt,
-      isVerified: false,
+      // otp,
+      // otpExpiresAt,
+      isVerified: true,
     });
 
     // 7. Send OTP email
-    await sendEmail(
-      email,
-      "Luxe Screens - Email Verification OTP",
-      `
-        <h2>Welcome to Luxe Screens</h2>
+    // await sendEmail(
+    //   email,
+    //   "Luxe Screens - Email Verification OTP",
+    //   `
+    //     <h2>Welcome to Luxe Screens</h2>
 
-        <p>Hello ${name},</p>
+    //     <p>Hello ${name},</p>
 
-        <p>Your email verification OTP is:</p>
+    //     <p>Your email verification OTP is:</p>
 
-        <h1>${otp}</h1>
+    //     <h1>${otp}</h1>
 
-        <p>This OTP will expire in 10 minutes.</p>
+    //     <p>This OTP will expire in 10 minutes.</p>
 
-        <p>If you did not create this account, please ignore this email.</p>
+    //     <p>If you did not create this account, please ignore this email.</p>
 
-        <p>Thank you,<br />Luxe Screens Team</p>
-      `,
-    );
+    //     <p>Thank you,<br />Luxe Screens Team</p>
+    //   `,
+    // );
 
     // 8. Response
     res.status(201).json({
       success: true,
-      message: "Registration successful. OTP sent to your email.",
+      message: "Registration successful.",
       userId: user._id,
     });
   } catch (error) {
@@ -80,151 +80,151 @@ export const register = async (req, res) => {
   }
 };
 
-export const verifyOTP = async (req, res) => {
-  try {
-    const { email, otp } = req.body;
+// export const verifyOTP = async (req, res) => {
+//   try {
+//     const { email, otp } = req.body;
 
-    // 1. Check required fields
-    if (!email || !otp) {
-      return res.status(400).json({
-        success: false,
-        message: "Email and OTP are required",
-      });
-    }
+//     // 1. Check required fields
+//     if (!email || !otp) {
+//       return res.status(400).json({
+//         success: false,
+//         message: "Email and OTP are required",
+//       });
+//     }
 
-    // 2. Find user
-    const user = await User.findOne({ email });
+//     // 2. Find user
+//     const user = await User.findOne({ email });
 
-    if (!user) {
-      return res.status(404).json({
-        success: false,
-        message: "User not found",
-      });
-    }
+//     if (!user) {
+//       return res.status(404).json({
+//         success: false,
+//         message: "User not found",
+//       });
+//     }
 
-    // 3. Check if already verified
-    if (user.isVerified) {
-      return res.status(400).json({
-        success: false,
-        message: "Email is already verified",
-      });
-    }
+//     // 3. Check if already verified
+//     if (user.isVerified) {
+//       return res.status(400).json({
+//         success: false,
+//         message: "Email is already verified",
+//       });
+//     }
 
-    // 4. Check OTP
-    if (user.otp !== otp) {
-      return res.status(400).json({
-        success: false,
-        message: "Invalid OTP",
-      });
-    }
+//     // 4. Check OTP
+//     if (user.otp !== otp) {
+//       return res.status(400).json({
+//         success: false,
+//         message: "Invalid OTP",
+//       });
+//     }
 
-    // 5. Check OTP expiry
-    if (!user.otpExpiresAt || user.otpExpiresAt < new Date()) {
-      return res.status(400).json({
-        success: false,
-        message: "OTP has expired",
-      });
-    }
+//     // 5. Check OTP expiry
+//     if (!user.otpExpiresAt || user.otpExpiresAt < new Date()) {
+//       return res.status(400).json({
+//         success: false,
+//         message: "OTP has expired",
+//       });
+//     }
 
-    // 6. Verify user
-    user.isVerified = true;
+//     // 6. Verify user
+//     user.isVerified = true;
 
-    // 7. Clear OTP
-    user.otp = null;
-    user.otpExpiresAt = null;
+//     // 7. Clear OTP
+//     user.otp = null;
+//     user.otpExpiresAt = null;
 
-    await user.save();
+//     await user.save();
 
-    // 8. Send response
-    res.status(200).json({
-      success: true,
-      message: "Email verified successfully",
-    });
-  } catch (error) {
-    res.status(500).json({
-      success: false,
-      message: "OTP verification failed",
-      error: error.message,
-    });
-  }
-};
+//     // 8. Send response
+//     res.status(200).json({
+//       success: true,
+//       message: "Email verified successfully",
+//     });
+//   } catch (error) {
+//     res.status(500).json({
+//       success: false,
+//       message: "OTP verification failed",
+//       error: error.message,
+//     });
+//   }
+// };
 
-export const resendOTP = async (req, res) => {
-  try {
-    const { email } = req.body;
+// export const resendOTP = async (req, res) => {
+//   try {
+//     const { email } = req.body;
 
-    // 1. Check email
-    if (!email) {
-      return res.status(400).json({
-        success: false,
-        message: "Email is required",
-      });
-    }
+//     // 1. Check email
+//     if (!email) {
+//       return res.status(400).json({
+//         success: false,
+//         message: "Email is required",
+//       });
+//     }
 
-    // 2. Find user
-    const user = await User.findOne({ email });
+//     // 2. Find user
+//     const user = await User.findOne({ email });
 
-    if (!user) {
-      return res.status(404).json({
-        success: false,
-        message: "User not found",
-      });
-    }
+//     if (!user) {
+//       return res.status(404).json({
+//         success: false,
+//         message: "User not found",
+//       });
+//     }
 
-    // 3. Check if already verified
-    if (user.isVerified) {
-      return res.status(400).json({
-        success: false,
-        message: "Email is already verified",
-      });
-    }
+//     // 3. Check if already verified
+//     if (user.isVerified) {
+//       return res.status(400).json({
+//         success: false,
+//         message: "Email is already verified",
+//       });
+//     }
 
-    // 4. Generate new 6-digit OTP
-    const otp = Math.floor(100000 + Math.random() * 900000).toString();
+//     // 4. Generate new 6-digit OTP
+//     const otp = Math.floor(100000 + Math.random() * 900000).toString();
 
-    // 5. Set OTP expiry to 10 minutes
-    const otpExpiresAt = new Date(Date.now() + 10 * 60 * 1000);
+//     // 5. Set OTP expiry to 10 minutes
+//     const otpExpiresAt = new Date(Date.now() + 10 * 60 * 1000);
 
-    // 6. Update user
-    user.otp = otp;
-    user.otpExpiresAt = otpExpiresAt;
+//     // 6. Update user
+//     user.otp = otp;
+//     user.otpExpiresAt = otpExpiresAt;
 
-    await user.save();
+//     await user.save();
 
-    // 7. Send new OTP
-    await sendEmail(
-      email,
-      "Luxe Screens - New Verification OTP",
-      `
-        <h2>Luxe Screens Email Verification</h2>
+//     // 7. Send new OTP
+//     await sendEmail(
+//       email,
+//       "Luxe Screens - New Verification OTP",
+//       `
+//         <h2>Luxe Screens Email Verification</h2>
 
-        <p>Hello ${user.name},</p>
+//         <p>Hello ${user.name},</p>
 
-        <p>Your new verification OTP is:</p>
+//         <p>Your new verification OTP is:</p>
 
-        <h1>${otp}</h1>
+//         <h1>${otp}</h1>
 
-        <p>This OTP will expire in 10 minutes.</p>
+//         <p>This OTP will expire in 10 minutes.</p>
 
-        <p>If you did not request this OTP, please ignore this email.</p>
+//         <p>If you did not request this OTP, please ignore this email.</p>
 
-        <p>Thank you,<br />Luxe Screens Team</p>
-      `,
-    );
+//         <p>Thank you,<br />Luxe Screens Team</p>
+//       `,
+//     );
 
-    // 8. Response
-    res.status(200).json({
-      success: true,
-      message: "New OTP sent successfully",
-    });
-  } catch (error) {
-    res.status(500).json({
-      success: false,
-      message: "Failed to resend OTP",
-      error: error.message,
-    });
-  }
-};
+//     // 8. Response
+//     res.status(200).json({
+//       success: true,
+//       message: "New OTP sent successfully",
+//     });
+//   } catch (error) {
+//     res.status(500).json({
+//       success: false,
+//       message: "Failed to resend OTP",
+//       error: error.message,
+//     });
+//   }
+// };
 
 export const login = async (req, res) => {
   try {
@@ -249,12 +249,12 @@ export const login = async (req, res) => {
     }
 
     // 3. Check email verification
-    if (!user.isVerified) {
-      return res.status(403).json({
-        success: false,
-        message: "Please verify your email before login",
-      });
-    }
+    // if (!user.isVerified) {
+    //   return res.status(403).json({
+    //     success: false,
+    //     message: "Please verify your email before login",
+    //   });
+    // }
 
     // 4. Compare password
     const isPasswordMatch = await bcrypt.compare(password, user.password);

@@ -68,9 +68,9 @@ const Signup = () => {
                 return;
             }
 
-            localStorage.setItem("verificationEmail", email);
+            // localStorage.setItem("verificationEmail", email);
 
-            navigate("/verify-otp");
+            navigate("/login");
         } catch (error) {
             setError("Something went wrong. Please try again.");
         } finally {

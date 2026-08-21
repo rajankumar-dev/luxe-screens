@@ -1,7 +1,13 @@
 import Footer from "./components/layouts/Footer.jsx";
 import Header from "./components/layouts/Header.jsx";
 
-import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
+import {
+  HashRouter,
+  Routes,
+  Route,
+  useLocation,
+} from "react-router-dom";
+
 import "./index.css";
 
 import Gallery from "./pages/Gallery.jsx";
@@ -37,45 +43,105 @@ function AppContent() {
   return (
     <div className="min-h-screen bg-black text-white">
 
+      {/* Header */}
       {!isAuthPage && <Header />}
 
+      {/* Routes */}
       <Routes>
+
+        {/* Public Routes */}
         <Route path="/" element={<Home />} />
-        <Route path="/gallery" element={<Gallery />} />
-        <Route path="/services" element={<Services />} />
-        <Route path="/faq" element={<FAQ />} />
-        <Route path="/contact" element={<Contact />} />
-        <Route element={<ProtectedRoute />}>
-          <Route path="/booking" element={<Booking />} />
-          <Route path="/my-bookings" element={<MyBookings />} />
-        </Route>
-        <Route path="/signup" element={<Signup />} />
-        <Route path="/verify-otp" element={<VerifyOTP />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/profile" element={<Profile />} />
+
+        <Route
+          path="/gallery"
+          element={<Gallery />}
+        />
+
+        <Route
+          path="/services"
+          element={<Services />}
+        />
+
+        <Route
+          path="/faq"
+          element={<FAQ />}
+        />
+
+        <Route
+          path="/contact"
+          element={<Contact />}
+        />
+
+        <Route
+          path="/ai-planner"
+          element={<AIPlanner />}
+        />
+
+        <Route
+          path="/waitlist"
+          element={<Waitlist />}
+        />
+
+        {/* Authentication Routes */}
+        <Route
+          path="/signup"
+          element={<Signup />}
+        />
+
+        <Route
+          path="/verify-otp"
+          element={<VerifyOTP />}
+        />
+
+        <Route
+          path="/login"
+          element={<Login />}
+        />
+
         <Route
           path="/forgot-password"
           element={<ForgotPassword />}
         />
+
         <Route
           path="/reset-password"
           element={<ResetPassword />}
         />
-        <Route path="/ai-planner" element={<AIPlanner />} />
-        <Route path="/waitlist" element={<Waitlist />} />
+
+        {/* Protected Routes */}
+        <Route element={<ProtectedRoute />}>
+
+          <Route
+            path="/booking"
+            element={<Booking />}
+          />
+
+          <Route
+            path="/my-bookings"
+            element={<MyBookings />}
+          />
+
+          <Route
+            path="/profile"
+            element={<Profile />}
+          />
+
+        </Route>
 
       </Routes>
 
+      {/* Footer */}
       {!isAuthPage && <Footer />}
+
     </div>
   );
 }
 
 function App() {
   return (
-    <BrowserRouter>
+    <HashRouter>
       <AppContent />
-    </BrowserRouter>
+    </HashRouter>
   );
 }
 

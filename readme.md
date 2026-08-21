@@ -68,11 +68,9 @@ Example:
 | LUXE10      | 10%      |
 | LUXE500     | 500      |
 
-> Replace the example coupon with the actual coupon code seeded in the database.
-
 ### Payment
 
-The application supports the booking payment flow.
+The application supports the simulated booking payment flow.
 
 After successful payment:
 

@@ -120,7 +120,6 @@ The application is designed to work across:
 ### Additional Technologies
 
 - Nodemailer
-- Payment Gateway
 - AI integration
 - REST APIs
 

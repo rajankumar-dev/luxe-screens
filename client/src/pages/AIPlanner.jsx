@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { apiUrl } from "../config/api.js";
 
 const AIPlanner = () => {
     const [occasion, setOccasion] = useState("");
@@ -24,7 +25,7 @@ const AIPlanner = () => {
             setLoading(true);
 
             const response = await fetch(
-                "http://localhost:5000/api/ai/planner",
+                `${apiUrl}/api/ai/planner`,
                 {
                     method: "POST",
                     headers: {

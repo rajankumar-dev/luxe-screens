@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { apiUrl } from "../config/api.js";
 
 const Waitlist = () => {
     const [name, setName] = useState("");
@@ -24,7 +25,7 @@ const Waitlist = () => {
             setLoading(true);
 
             const response = await fetch(
-                "http://localhost:5000/api/waitlist",
+                `${apiUrl}/api/waitlist`,
                 {
                     method: "POST",
                     headers: {

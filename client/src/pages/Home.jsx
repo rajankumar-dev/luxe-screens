@@ -10,6 +10,7 @@ import hero3 from "../assets/images/hero-3.jpg";
 //theater images
 import luxeGold from "../assets/images/theaters/luxe-gold.jpg";
 import luxePremium from "../assets/images/theaters/luxe-premium.jpg";
+import { apiUrl } from "../config/api.js";
 
 const Home = () => {
     const [theaters, setTheaters] = useState([]);
@@ -34,7 +35,7 @@ const Home = () => {
         const fetchTheaters = async () => {
             try {
                 const response = await fetch(
-                    "http://localhost:5000/api/theaters"
+                    `${apiUrl}/api/theaters`
                 );
 
                 const data = await response.json();
@@ -62,7 +63,7 @@ const Home = () => {
         const fetchAddons = async () => {
             try {
                 const response = await fetch(
-                    "http://localhost:5000/api/addons"
+                    `${apiUrl}/api/addons`
                 );
 
                 const data = await response.json();

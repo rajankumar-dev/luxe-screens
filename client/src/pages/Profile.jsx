@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { apiUrl } from "../config/api.js";
 
 const Profile = () => {
     const navigate = useNavigate();
@@ -28,7 +29,7 @@ const Profile = () => {
 
             try {
                 const response = await fetch(
-                    "http://localhost:5000/api/profile",
+                    `${apiUrl}/api/profile`,
                     {
                         method: "GET",
                         headers: {
@@ -79,7 +80,7 @@ const Profile = () => {
             setUpdating(true);
 
             const response = await fetch(
-                "http://localhost:5000/api/profile",
+                `${apiUrl}/api/profile`,
                 {
                     method: "PUT",
                     headers: {
@@ -136,7 +137,7 @@ const Profile = () => {
             setError("");
 
             const response = await fetch(
-                "http://localhost:5000/api/profile",
+                `${apiUrl}/api/profile`,
                 {
                     method: "DELETE",
                     headers: {

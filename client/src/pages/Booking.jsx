@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { apiUrl } from "../config/api.js";
 
 function Booking() {
     const [step, setStep] = useState(1);
@@ -68,7 +69,7 @@ function Booking() {
             try {
                 setSlotsLoading(true);
 
-                const response = await fetch("http://localhost:5000/api/slots");
+                const response = await fetch(`${apiUrl}/api/slots`);
                 const data = await response.json();
 
                 if (data.success) {
@@ -93,7 +94,7 @@ function Booking() {
                 setTheatersLoading(true);
 
                 const response = await fetch(
-                    "http://localhost:5000/api/theaters"
+                    `${apiUrl}/api/theaters`
                 );
 
                 const data = await response.json();
@@ -131,7 +132,7 @@ function Booking() {
                 setCakesLoading(true);
 
                 const response = await fetch(
-                    "http://localhost:5000/api/addons"
+                    `${apiUrl}/api/addons`
                 );
 
                 const data = await response.json();
@@ -162,7 +163,7 @@ function Booking() {
                 setDecorLoading(true);
 
                 const response = await fetch(
-                    "http://localhost:5000/api/addons"
+                    `${apiUrl}/api/addons`
                 );
 
                 const data = await response.json();
@@ -193,7 +194,7 @@ function Booking() {
                 setGiftsLoading(true);
 
                 const response = await fetch(
-                    "http://localhost:5000/api/addons"
+                    `${apiUrl}/api/addons`
                 );
 
                 const data = await response.json();
@@ -250,7 +251,7 @@ function Booking() {
             setCouponError("");
 
             const response = await fetch(
-                "http://localhost:5000/api/coupons/validate",
+                `${apiUrl}/api/coupons/validate`,
                 {
                     method: "POST",
                     headers: {
@@ -345,7 +346,7 @@ function Booking() {
 
             // 1. Create booking
             const response = await fetch(
-                "http://localhost:5000/api/bookings",
+                `${apiUrl}/api/bookings`,
                 {
                     method: "POST",
                     headers: {
@@ -369,7 +370,7 @@ function Booking() {
 
             // 2. Confirm booking
             const confirmResponse = await fetch(
-                `http://localhost:5000/api/bookings/${data.booking._id}/confirm`,
+                `${apiUrl}/api/bookings/${data.booking._id}/confirm`,
                 {
                     method: "POST",
                     headers: {

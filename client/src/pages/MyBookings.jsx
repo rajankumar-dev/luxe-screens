@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import { apiUrl } from "../config/api.js";
 
 const MyBookings = () => {
     const [bookings, setBookings] = useState([]);
@@ -17,7 +18,7 @@ const MyBookings = () => {
                 }
 
                 const response = await fetch(
-                    "http://localhost:5000/api/bookings",
+                    `${apiUrl}/api/bookings`,
                     {
                         headers: {
                             Authorization: `Bearer ${token}`,
@@ -126,12 +127,12 @@ const MyBookings = () => {
 
                                             <span
                                                 className={`rounded-full px-3 py-1 text-xs ${booking.paymentStatus ===
-                                                        "PAID"
-                                                        ? "bg-green-500/10 text-green-400"
-                                                        : booking.paymentStatus ===
-                                                            "FAILED"
-                                                            ? "bg-red-500/10 text-red-400"
-                                                            : "bg-yellow-500/10 text-yellow-400"
+                                                    "PAID"
+                                                    ? "bg-green-500/10 text-green-400"
+                                                    : booking.paymentStatus ===
+                                                        "FAILED"
+                                                        ? "bg-red-500/10 text-red-400"
+                                                        : "bg-yellow-500/10 text-yellow-400"
                                                     }`}
                                             >
                                                 {booking.paymentStatus}

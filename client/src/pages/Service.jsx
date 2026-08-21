@@ -1,6 +1,7 @@
 
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import { apiUrl } from "../config/api.js";
 
 const Services = () => {
     const [addons, setAddons] = useState([]);
@@ -11,7 +12,7 @@ const Services = () => {
         const fetchAddons = async () => {
             try {
                 const response = await fetch(
-                    "http://localhost:5000/api/addons"
+                    `${apiUrl}/api/addons`
                 );
 
                 const data = await response.json();

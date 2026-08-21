@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 
 import luxeGold from "../assets/images/theaters/luxe-gold.jpg";
 import luxePremium from "../assets/images/theaters/luxe-premium.jpg";
+import { apiUrl } from "../config/api.js";
 
 const Gallery = () => {
     const [theaters, setTheaters] = useState([]);
@@ -14,7 +15,7 @@ const Gallery = () => {
         const fetchTheaters = async () => {
             try {
                 const response = await fetch(
-                    "http://localhost:5000/api/theaters"
+                    `${apiUrl}/api/theaters`
                 );
 
                 const data = await response.json();

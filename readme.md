@@ -14,6 +14,11 @@ Luxe Screens is a premium private theatre booking web application where users ca
 - Forgot password
 - Password reset using OTP
 
+**Note:**
+
+> Email OTP verification is temporarily disabled due to limitations of the Render Free Tier affecting the email service.
+> The OTP verification feature is implemented and will be re-enabled when the email service is restored.
+
 ### Theatre Booking
 
 Users can create a private theatre booking through a multi-step booking process.

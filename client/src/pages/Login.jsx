@@ -3,7 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { apiUrl } from "../config/api.js";
 
 const Login = () => {
-    const navigate = useNavigate();
+    // const navigate = useNavigate();
 
     const [formData, setFormData] = useState({
         email: "",
@@ -129,12 +129,12 @@ const Login = () => {
                                 Password
                             </label>
 
-                            <Link
+                            {/* <Link
                                 to="/forgot-password"
                                 className="text-xs text-white/50 hover:text-white"
                             >
                                 Forgot password?
-                            </Link>
+                            </Link> */}
                         </div>
 
                         <input
